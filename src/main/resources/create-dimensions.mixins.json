@@ -1,9 +1,0 @@
-{
-  "required": true,
-  "package": "dev.JustRed23.create-dimensions.mixin",
-  "compatibilityLevel": "JAVA_16",
-  "refmap": "create-dimensions-refmap.json",
-  "mixins": [
-
-  ]
-}

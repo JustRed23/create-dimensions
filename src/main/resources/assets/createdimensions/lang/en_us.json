@@ -1,0 +1,14 @@
+{
+  "block.createdimensions.dimensional_item_transporter": "Dimensional Item Transporter",
+  "block.createdimensions.dimensional_fluid_transporter": "Dimensional Fluid Transporter",
+  "block.createdimensions.dimensional_rotation_transporter": "Dimensional Rotation Transporter",
+
+  "item.createdimensions.transporter_synchronizer_card": "Transporter Synchronizer Card",
+
+  "message.createdimensions.transporter.mode-changed": "Mode changed to: %s",
+  "message.createdimensions.transporter_synchronizer_card.stored": "Stored connection data",
+  "message.createdimensions.transporter_synchronizer_card.success": "Successfully synchronized transporters",
+  "message.createdimensions.transporter_synchronizer_card.fail": "Could not synchronize transporters: %s",
+
+  "itemGroup.createdimensions.main": "Create: Dimensions"
+}

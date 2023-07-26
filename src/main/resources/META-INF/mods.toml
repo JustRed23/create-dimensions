@@ -3,7 +3,7 @@ loaderVersion="[40,)"
 license="All rights reserved"
 
 [[mods]]
-modId="create-dimensions"
+modId="createdimensions"
 version="${file.jarVersion}"
 displayName="Create: Dimensions"
 logoFile="pack.png"
@@ -12,21 +12,21 @@ description='''
 Create: Dimensions adds support for transportation of items, fluids, and rotational energy between dimensions.
 '''
 
-[[dependencies.create-dimensions]]
+[[dependencies.createdimensions]]
     modId="forge"
     mandatory=true
     versionRange="[40,)"
     ordering="NONE"
     side="BOTH"
 
-[[dependencies.create-dimensions]]
+[[dependencies.createdimensions]]
     modId="minecraft"
     mandatory=true
     versionRange="[1.18.2,1.19)"
     ordering="NONE"
     side="BOTH"
 
-[[dependencies.create-dimensions]]
+[[dependencies.createdimensions]]
     modId="create"
     mandatory=true
     versionRange="[0.5.1.c,)"

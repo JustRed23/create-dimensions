@@ -20,8 +20,8 @@ apply plugin: 'org.spongepowered.mixin'
 
 
 version = '0.1'
-group = 'dev.JustRed23.create-dimensions' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = 'create-dimensions'
+group = 'dev.JustRed23.createdimensions' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
+archivesBaseName = 'createdimensions'
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
@@ -35,7 +35,7 @@ minecraft {
         client {
             workingDirectory project.file('run/client')
 			
-			arg '-mixin.config=create-dimensions.mixins.json'
+			arg '-mixin.config=createdimensions.mixins.json'
 
             property 'forge.logging.markers', 'REGISTRIES'
             property 'forge.logging.console.level', 'info'
@@ -51,7 +51,7 @@ minecraft {
         server {
             workingDirectory project.file('run/server')
 			
-			arg '-mixin.config=create-dimensions.mixins.json'
+			arg '-mixin.config=createdimensions.mixins.json'
 
             property 'forge.logging.markers', 'REGISTRIES'
             property 'forge.logging.console.level', 'info'
@@ -67,7 +67,7 @@ minecraft {
         gameTestServer {
             workingDirectory project.file('run/gametest')
 			
-			arg '-mixin.config=create-dimensions.mixins.json'
+			arg '-mixin.config=createdimensions.mixins.json'
 
             property 'forge.logging.markers', 'REGISTRIES'
 			property 'forge.logging.console.level', 'debug'
@@ -155,7 +155,7 @@ sourceSets.main.resources {
 }
 
 mixin {
-    add sourceSets.main, 'create-dimensions.refmap.json'
+    add sourceSets.main, 'createdimensions.refmap.json'
 }
 
 // Workaround for SpongePowered/MixinGradle#38
@@ -175,14 +175,14 @@ compileJava {
 jar {
     manifest {
         attributes([
-                "Specification-Title"     : "create-dimensions",
+                "Specification-Title"     : "createdimensions",
                 "Specification-Vendor"    : "JustRed23",
                 "Specification-Version"   : "1", // We are version 1 of ourselves
                 "Implementation-Title"    : project.jar.baseName,
                 "Implementation-Version"  : project.jar.archiveVersion,
                 "Implementation-Vendor"   : "JustRed23",
                 "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
-				'MixinConfigs': 'create-dimensions.mixins.json'
+				'MixinConfigs': 'createdimensions.mixins.json'
         ])
     }
 }
