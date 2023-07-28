@@ -26,7 +26,7 @@ public class FluidTransporterEntity extends TransporterEntity implements IHaveGo
     }
 
     public void addBehaviours(List<BlockEntityBehaviour> behaviours) {
-        behaviours.add(tank = SmartFluidTankBehaviour.single(this, 1000).whenFluidUpdates(super::syncWithConnected));
+        behaviours.add(tank = SmartFluidTankBehaviour.single(this, 2000).whenFluidUpdates(super::syncWithConnected));
         setMode(TransportationMode.INSERT);
         tank.getPrimaryHandler().setValidator(fluid -> isConnected()); // Only allow fluid to be inserted/extracted if the block is connected
     }
