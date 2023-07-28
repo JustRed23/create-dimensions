@@ -9,6 +9,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
@@ -90,9 +91,6 @@ public abstract class TransporterEntity extends SmartBlockEntity {
 
         if (other.preventSync) return;
 
-        other.connectedTo = getBlockPos();
-        other.dimension = getLevel().dimension();
-
         other.preventSync = true;
         trySyncContents(other);
         other.preventSync = false;
@@ -108,11 +106,19 @@ public abstract class TransporterEntity extends SmartBlockEntity {
         ServerLevel dimensionLevel = getLevel().getServer().getLevel(dimension);
         if (dimensionLevel == null) return ConnectionStatus.INVALID_LEVEL;
 
-        if (!trySync((TransporterEntity) dimensionLevel.getBlockEntity(pos)))
+        final BlockEntity blockEntity = dimensionLevel.getBlockEntity(pos);
+        if (!(blockEntity instanceof TransporterEntity other))
+            return ConnectionStatus.INVALID_BLOCK;
+
+        if (!trySync(other))
             return ConnectionStatus.SYNC_FAILURE;
 
         this.connectedTo = pos;
         this.dimension = dimension;
+
+        other.connectedTo = getBlockPos();
+        other.dimension = getLevel().dimension();
+
         syncWithConnected();
         return ConnectionStatus.SUCCESS;
     }
@@ -174,6 +180,7 @@ public abstract class TransporterEntity extends SmartBlockEntity {
         ALREADY_CONNECTED("already connected to this block"),
         CANNOT_CONNECT_TO_SELF("cannot connect to self"),
         INVALID_LEVEL("invalid world"),
+        INVALID_BLOCK("invalid block"),
         SYNC_FAILURE("something went wrong while trying to sync"),
         SUCCESS;
 
