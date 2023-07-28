@@ -74,7 +74,7 @@ public class ItemTransporterEntity extends TransporterEntity implements IHaveGog
         }
 
         if (empty)
-            tooltip.remove(0);
+            tooltip.clear();
 
         return true;
     }
