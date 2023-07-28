@@ -55,6 +55,7 @@ public abstract class TransporterEntity extends SmartBlockEntity {
         }
 
         mode = NBTHelper.readEnum(tag, "Mode", TransportationMode.class);
+        setMode(mode); // Actually update the mode
     }
 
     protected void write(CompoundTag tag, boolean clientPacket) {

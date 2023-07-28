@@ -18,6 +18,17 @@ public class RotationTransporterEntity extends TransporterEntity {
     }
 
     protected boolean trySync(TransporterEntity blockEntity) {
+        if (!(blockEntity instanceof RotationTransporterEntity other)) // Cannot connect if the block entity is not of the same type
+            return false;
+
+        if (this.isVirtual() || other.isVirtual()) // Cannot connect if either of the blocks are virtual
+            return false;
+
+        if (this.isConnected() || other.isConnected()) // Cannot connect if either of the blocks are already connected
+            return false;
+
+        //Todo: check if has rotation
+
         return false;
     }
 
