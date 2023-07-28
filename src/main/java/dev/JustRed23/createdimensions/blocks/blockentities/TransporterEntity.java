@@ -90,7 +90,7 @@ public abstract class TransporterEntity extends SmartBlockEntity {
             return;
         }
 
-        if (other.preventSync) return;
+        if (this.preventSync || other.preventSync) return;
 
         other.preventSync = true;
         trySyncContents(other);
