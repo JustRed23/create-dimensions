@@ -44,13 +44,13 @@ public class ItemTransporterEntity extends TransporterEntity implements IHaveGog
     public void addBehaviours(List<BlockEntityBehaviour> behaviours) {
         behaviours.add(new DirectBeltInputBehaviour(this)
                 .allowingBeltFunnels()
-                .onlyInsertWhen(side -> side != Direction.DOWN && getMode() == TransportationMode.INSERT)
+                .onlyInsertWhen(side -> side != Direction.DOWN && getMode() == TransportationMode.INSERT && isConnected())
         );
     }
 
     @NotNull
     public <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
-        if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
+        if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && isConnected())
             return itemCapability.cast();
         return super.getCapability(cap, side);
     }

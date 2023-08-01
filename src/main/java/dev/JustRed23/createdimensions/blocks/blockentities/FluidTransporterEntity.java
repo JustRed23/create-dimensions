@@ -33,7 +33,7 @@ public class FluidTransporterEntity extends TransporterEntity implements IHaveGo
 
     @NotNull
     public <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
-        if (cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && side != Direction.DOWN)
+        if (cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && side != Direction.DOWN && isConnected())
             return tank.getCapability().cast();
         return super.getCapability(cap, side);
     }
