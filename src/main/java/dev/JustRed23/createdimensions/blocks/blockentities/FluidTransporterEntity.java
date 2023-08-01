@@ -42,7 +42,7 @@ public class FluidTransporterEntity extends TransporterEntity implements IHaveGo
         return containedFluidTooltip(tooltip, isPlayerSneaking, getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY));
     }
 
-    protected boolean trySync(TransporterEntity blockEntity) {
+    protected boolean tryConnect(TransporterEntity blockEntity) {
         if (!(blockEntity instanceof FluidTransporterEntity other)) // Cannot connect if the block entity is not of the same type
             return false;
 

@@ -79,7 +79,7 @@ public class ItemTransporterEntity extends TransporterEntity implements IHaveGog
         return true;
     }
 
-    protected boolean trySync(TransporterEntity blockEntity) {
+    protected boolean tryConnect(TransporterEntity blockEntity) {
         if (!(blockEntity instanceof ItemTransporterEntity other)) // Cannot connect if the block entity is not of the same type
             return false;
 

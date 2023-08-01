@@ -23,7 +23,7 @@ public abstract class TransporterEntity extends SmartBlockEntity {
     private TransportationMode mode = TransportationMode.INSERT;
     private boolean preventSync = false; // Prevents a sync loop when syncing with connected block
 
-    protected abstract boolean trySync(TransporterEntity blockEntity);
+    protected abstract boolean tryConnect(TransporterEntity blockEntity);
     protected abstract void trySyncContents(TransporterEntity blockEntity);
     protected abstract void onConnectionRemoved(boolean keepContents);
     protected abstract void onModeChanged(TransportationMode mode);
@@ -111,8 +111,8 @@ public abstract class TransporterEntity extends SmartBlockEntity {
         if (!(blockEntity instanceof TransporterEntity other))
             return ConnectionStatus.INVALID_BLOCK;
 
-        if (!trySync(other))
-            return ConnectionStatus.SYNC_FAILURE;
+        if (!tryConnect(other))
+            return ConnectionStatus.CONNECT_FAILURE;
 
         this.connectedTo = pos;
         this.dimension = dimension;
@@ -182,7 +182,7 @@ public abstract class TransporterEntity extends SmartBlockEntity {
         CANNOT_CONNECT_TO_SELF("cannot connect to self"),
         INVALID_LEVEL("invalid world"),
         INVALID_BLOCK("invalid block"),
-        SYNC_FAILURE("something went wrong while trying to sync"),
+        CONNECT_FAILURE("something went wrong while trying to sync"),
         SUCCESS;
 
         final String description;

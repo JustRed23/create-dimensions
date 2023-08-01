@@ -17,7 +17,7 @@ public class RotationTransporterEntity extends TransporterEntity {
 
     }
 
-    protected boolean trySync(TransporterEntity blockEntity) {
+    protected boolean tryConnect(TransporterEntity blockEntity) {
         if (!(blockEntity instanceof RotationTransporterEntity other)) // Cannot connect if the block entity is not of the same type
             return false;
 
