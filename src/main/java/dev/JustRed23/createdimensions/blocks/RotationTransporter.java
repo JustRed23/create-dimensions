@@ -4,7 +4,7 @@ import dev.JustRed23.createdimensions.blocks.blockentities.RotationTransporterEn
 import dev.JustRed23.createdimensions.register.CDBlockEntities;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 
-public class RotationTransporter  extends AbstractTransporter<RotationTransporterEntity> {
+public class RotationTransporter extends AbstractTransporter<RotationTransporterEntity> {
 
     public RotationTransporter(Properties pProperties) {
         super(pProperties);
