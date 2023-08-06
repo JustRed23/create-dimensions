@@ -1,13 +1,15 @@
 package dev.JustRed23.createdimensions.blocks.blockentities;
 
+import com.simibubi.create.content.equipment.goggles.IHaveGoggleInformation;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
+import dev.JustRed23.createdimensions.behaviour.ISync;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.List;
 
-public class RotationTransporterEntity extends TransporterEntity {
+public class RotationTransporterEntity extends TransporterEntity implements IHaveGoggleInformation, ISync {
 
     public RotationTransporterEntity(BlockEntityType<?> pType, BlockPos pPos, BlockState pBlockState) {
         super(pType, pPos, pBlockState);

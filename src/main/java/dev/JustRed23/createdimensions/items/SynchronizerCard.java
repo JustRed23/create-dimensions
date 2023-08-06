@@ -1,12 +1,12 @@
 package dev.JustRed23.createdimensions.items;
 
+import dev.JustRed23.createdimensions.behaviour.ISync;
 import dev.JustRed23.createdimensions.blocks.blockentities.TransporterEntity;
 import dev.JustRed23.createdimensions.register.CDItems;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -32,7 +32,7 @@ public class SynchronizerCard extends Item {
         ItemStack hand = pContext.getItemInHand();
 
         final BlockEntity blockEntity = pContext.getLevel().getBlockEntity(pContext.getClickedPos());
-        if (blockEntity instanceof TransporterEntity entity && hand.is(CDItems.TRANSPORTER_SYNCHRONIZER_CARD.get())) {
+        if (blockEntity != null && ISync.class.isAssignableFrom(blockEntity.getClass()) && hand.is(CDItems.TRANSPORTER_SYNCHRONIZER_CARD.get())) {
             if (hasStoredData(hand)) {
                 final CompoundTag tag = hand.getTag().getCompound("RemoteConnection");
 
@@ -40,7 +40,7 @@ public class SynchronizerCard extends Item {
                 BlockPos connectTo = new BlockPos(pos[0], pos[1], pos[2]);
 
                 ResourceLocation location = new ResourceLocation(tag.getString("dimension"));
-                TransporterEntity.ConnectionStatus status = entity.connectTo(connectTo, ResourceKey.create(Registry.DIMENSION_REGISTRY, location));
+                TransporterEntity.ConnectionStatus status = ((ISync) blockEntity).connectTo(connectTo, ResourceKey.create(Registry.DIMENSION_REGISTRY, location));
 
                 if (status != TransporterEntity.ConnectionStatus.SUCCESS) {
                     pContext.getPlayer().displayClientMessage(new TranslatableComponent("message.createdimensions.transporter_synchronizer_card.fail", status.description()).withStyle(ChatFormatting.RED), true);

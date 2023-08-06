@@ -3,6 +3,7 @@ package dev.JustRed23.createdimensions.blocks.blockentities;
 import com.simibubi.create.content.equipment.goggles.IHaveGoggleInformation;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.foundation.blockEntity.behaviour.fluid.SmartFluidTankBehaviour;
+import dev.JustRed23.createdimensions.behaviour.ISync;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -17,7 +18,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class FluidTransporterEntity extends TransporterEntity implements IHaveGoggleInformation {
+public class FluidTransporterEntity extends TransporterEntity implements IHaveGoggleInformation, ISync {
 
     private SmartFluidTankBehaviour tank;
 
