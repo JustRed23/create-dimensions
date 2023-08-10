@@ -2,6 +2,7 @@ package dev.JustRed23.createdimensions.blocks.blockentities;
 
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.utility.NBTHelper;
+import dev.JustRed23.createdimensions.behaviour.ISync;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
@@ -16,7 +17,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
-public abstract class TransporterEntity extends SmartBlockEntity {
+public abstract class TransporterEntity extends SmartBlockEntity implements ISync {
 
     protected BlockPos connectedTo;
     protected ResourceKey<Level> dimension;

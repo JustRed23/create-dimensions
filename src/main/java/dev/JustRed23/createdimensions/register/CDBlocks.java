@@ -5,7 +5,6 @@ import com.tterrag.registrate.util.entry.BlockEntry;
 import dev.JustRed23.createdimensions.DimensionsAddon;
 import dev.JustRed23.createdimensions.blocks.FluidTransporter;
 import dev.JustRed23.createdimensions.blocks.ItemTransporter;
-import dev.JustRed23.createdimensions.blocks.RotationTransporter;
 
 public final class CDBlocks {
 
@@ -26,10 +25,10 @@ public final class CDBlocks {
             .simpleItem()
             .register();
 
-    public static final BlockEntry<RotationTransporter> ROTATION_TRANSPORTER = DimensionsAddon.registrate()
-            .creativeModeTab(() -> CDCreativeTabs.MAIN)
-            .block("dimensional_rotation_transporter", RotationTransporter::new)
-            .initialProperties(SharedProperties::copperMetal)
-            .simpleItem()
-            .register();
+//    public static final BlockEntry<RotationTransporter> ROTATION_TRANSPORTER = DimensionsAddon.registrate()
+//            .creativeModeTab(() -> CDCreativeTabs.MAIN)
+//            .block("dimensional_rotation_transporter", RotationTransporter::new)
+//            .initialProperties(SharedProperties::copperMetal)
+//            .simpleItem()
+//            .register();
 }

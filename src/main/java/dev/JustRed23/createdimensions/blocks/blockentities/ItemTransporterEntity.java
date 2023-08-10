@@ -7,13 +7,11 @@ import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.item.SmartInventory;
 import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Lang;
-import dev.JustRed23.createdimensions.behaviour.ISync;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -27,7 +25,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class ItemTransporterEntity extends TransporterEntity implements IHaveGoggleInformation, ISync {
+public class ItemTransporterEntity extends TransporterEntity implements IHaveGoggleInformation {
 
     private final SmartInventory upgradeInventory;
     private final SmartInventory syncInventory;

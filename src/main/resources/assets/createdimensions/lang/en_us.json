@@ -4,6 +4,7 @@
   "block.createdimensions.dimensional_rotation_transporter": "Dimensional Rotation Transporter",
 
   "item.createdimensions.transporter_synchronizer_card": "Transporter Synchronizer Card",
+  "item.createdimensions.transporter_chunk_upgrade": "Transporter Chunk Upgrade",
 
   "message.createdimensions.transporter.mode-changed": "Mode changed to: %s",
   "message.createdimensions.transporter_synchronizer_card.stored": "Stored connection data",
