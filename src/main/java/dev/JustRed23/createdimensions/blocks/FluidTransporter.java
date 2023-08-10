@@ -16,6 +16,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.NotNull;
 
@@ -69,5 +70,9 @@ public class FluidTransporter extends HorizontalDirectionalBlock implements IBE<
         }
 
         return InteractionResult.PASS;
+    }
+
+    public PushReaction getPistonPushReaction(BlockState pState) {
+        return PushReaction.BLOCK;
     }
 }
