@@ -1,0 +1,242 @@
+package dev.JustRed23.createdimensions.blocks.blockentities;
+
+import com.simibubi.create.content.equipment.goggles.IHaveGoggleInformation;
+import com.simibubi.create.content.kinetics.base.IRotate;
+import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
+import com.simibubi.create.foundation.utility.NBTHelper;
+import dev.JustRed23.createdimensions.behaviour.ISync;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Registry;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
+import java.util.Objects;
+
+public class RotationTransporterEntity extends KineticBlockEntity implements IHaveGoggleInformation, ISync {
+
+    public RotationTransporterEntity(BlockEntityType<?> typeIn, BlockPos pos, BlockState state) {
+        super(typeIn, pos, state);
+    }
+
+    public boolean addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
+        return super.addToGoggleTooltip(tooltip, isPlayerSneaking);
+    }
+
+    protected boolean tryConnect(RotationTransporterEntity other) {
+        if (this.isVirtual() || other.isVirtual()) // Cannot connect if either of the blocks are virtual
+            return false;
+
+        if (this.isConnected() || other.isConnected()) // Cannot connect if either of the blocks are already connected
+            return false;
+
+        if (this.getSpeed() > 0 && other.getSpeed() > 0) // Cannot connect if both blocks are moving
+            return this.getSpeed() == other.getSpeed(); // Unless they are moving at the same speed
+
+        return true;
+    }
+
+    protected void trySyncContents(RotationTransporterEntity other) {
+        if (!other.getMode().equals(TransporterEntity.TransportationMode.EXTRACT))
+            return;
+
+        other.notifyUpdate();
+    }
+
+    protected void onConnectionRemoved(boolean keepContents) {
+        clearKineticInformation();
+        setChanged();
+    }
+
+    protected void onModeChanged(TransporterEntity.TransportationMode mode) {
+        setChanged();
+    }
+
+    public void setChanged() {
+        if (this.isConnected()) syncWithConnected();
+        super.setChanged();
+    }
+
+    public List<BlockPos> addPropagationLocations(IRotate block, BlockState state, List<BlockPos> neighbours) {
+        final RotationTransporterEntity other = getOther();
+        if (isConnected() && other != null && this.getMode().equals(TransporterEntity.TransportationMode.INSERT) && other.getMode().equals(TransporterEntity.TransportationMode.EXTRACT))
+            neighbours.add(other.getBlockPos());
+        return super.addPropagationLocations(block, state, neighbours);
+    }
+
+    public float propagateRotationTo(KineticBlockEntity target, BlockState stateFrom, BlockState stateTo, BlockPos diff, boolean connectedViaAxes, boolean connectedViaCogs) {
+        if (isConnected() && isCustomConnection(target, stateFrom, stateTo))
+            return 1;
+        return super.propagateRotationTo(target, stateFrom, stateTo, diff, connectedViaAxes, connectedViaCogs);
+    }
+
+    public boolean isCustomConnection(KineticBlockEntity other, BlockState state, BlockState otherState) {
+        final RotationTransporterEntity other1 = getOther();
+        if (other != null && other.equals(other1))
+            return true;
+        return super.isCustomConnection(other, state, otherState);
+    }
+
+    private RotationTransporterEntity getOther() {
+        if (!isConnected()) return null;
+        BlockEntity blockEntity = level.getBlockEntity(connectedTo);
+        if (!(blockEntity instanceof RotationTransporterEntity other)) return null;
+        return other;
+    }
+
+
+
+    // Code copied from TransporterEntity
+    protected BlockPos connectedTo;
+    protected ResourceKey<Level> dimension;
+    private TransporterEntity.TransportationMode mode = TransporterEntity.TransportationMode.INSERT;
+    private boolean preventSync = false; // Prevents a sync loop when syncing with connected block
+
+    public void initialize() {
+        super.initialize();
+        if (isConnected()) connectTo(connectedTo, dimension); // Attempt to reconnect with the data we got from nbt
+    }
+
+    protected void read(CompoundTag tag, boolean clientPacket) {
+        super.read(tag, clientPacket);
+
+        if (!clientPacket) {
+            if (!tag.contains("RemoteConnection"))
+                return;
+
+            CompoundTag connectionTag = tag.getCompound("RemoteConnection");
+            if (!connectionTag.contains("pos") || !connectionTag.contains("dimension"))
+                return;
+
+            int[] pos = connectionTag.getIntArray("pos");
+            connectedTo = new BlockPos(pos[0], pos[1], pos[2]);
+
+            dimension = ResourceKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation(connectionTag.getString("dimension")));
+        }
+
+        mode = NBTHelper.readEnum(tag, "Mode", TransporterEntity.TransportationMode.class);
+        onModeChanged(mode); // Actually update the mode
+    }
+
+    protected void write(CompoundTag tag, boolean clientPacket) {
+        super.write(tag, clientPacket);
+
+        if (!clientPacket) {
+            if (!isConnected()) return;
+
+            CompoundTag connectionTag = new CompoundTag();
+            connectionTag.putIntArray("pos", new int[]{connectedTo.getX(), connectedTo.getY(), connectedTo.getZ()});
+            connectionTag.putString("dimension", dimension.location().toString());
+            tag.put("RemoteConnection", connectionTag);
+        }
+
+        NBTHelper.writeEnum(tag, "Mode", mode);
+    }
+
+    public void destroy() {
+        clearConnection(false);
+        super.destroy();
+    }
+
+    public void syncWithConnected() {
+        if (!(level instanceof ServerLevel) || !isConnected()) return;
+
+        ServerLevel dimensionLevel = level.getServer().getLevel(dimension);
+        if (dimensionLevel == null)
+            return;
+
+        if (!(dimensionLevel.getBlockEntity(connectedTo) instanceof RotationTransporterEntity other)) {
+            clearConnection(true);
+            return;
+        }
+
+        if (this.preventSync || other.preventSync) return;
+
+        other.preventSync = true;
+        trySyncContents(other);
+        other.preventSync = false;
+    }
+
+    public TransporterEntity.ConnectionStatus connectTo(BlockPos pos, ResourceKey<Level> dimension) {
+        if (pos == null || dimension == null) return TransporterEntity.ConnectionStatus.INVALID_DATA;
+        if (Objects.equals(dimension, this.dimension) && Objects.equals(pos, this.connectedTo)) return TransporterEntity.ConnectionStatus.ALREADY_CONNECTED; // Already connected to this block
+
+        if (Objects.equals(getBlockPos(), pos) && Objects.equals(getLevel(), dimension))
+            return TransporterEntity.ConnectionStatus.CANNOT_CONNECT_TO_SELF;
+
+        ServerLevel dimensionLevel = getLevel().getServer().getLevel(dimension);
+        if (dimensionLevel == null) return TransporterEntity.ConnectionStatus.INVALID_LEVEL;
+
+        final BlockEntity blockEntity = dimensionLevel.getBlockEntity(pos);
+        if (!(blockEntity instanceof RotationTransporterEntity other))
+            return TransporterEntity.ConnectionStatus.INVALID_BLOCK;
+
+        if (!tryConnect(other))
+            return TransporterEntity.ConnectionStatus.CONNECT_FAILURE;
+
+        this.connectedTo = pos;
+        this.dimension = dimension;
+
+        other.connectedTo = getBlockPos();
+        other.dimension = getLevel().dimension();
+
+        syncWithConnected();
+        return TransporterEntity.ConnectionStatus.SUCCESS;
+    }
+
+    public boolean isConnected() {
+        return dimension != null && connectedTo != null;
+    }
+
+    private void disconnect(boolean keepContents) {
+        this.connectedTo = null;
+        this.dimension = null;
+        onConnectionRemoved(keepContents);
+    }
+
+    public void clearConnection(boolean keepContents) {
+        clearConnection(keepContents, false);
+    }
+
+    public void clearConnection(boolean keepContents, boolean keepBoth) {
+        if (!isConnected()) return;
+
+        ServerLevel dimensionLevel = level.getServer().getLevel(this.dimension);
+        if (dimensionLevel == null) return;
+
+        if (!(dimensionLevel.getBlockEntity(connectedTo) instanceof RotationTransporterEntity other)) return;
+
+        other.disconnect(keepBoth || !keepContents);
+        disconnect(keepBoth || keepContents);
+    }
+
+    public BlockPos getConnection() {
+        return connectedTo;
+    }
+
+    public ResourceKey<Level> getDimension() {
+        return dimension;
+    }
+
+    public void setMode(@NotNull TransporterEntity.TransportationMode mode) {
+        if (mode.equals(this.mode)) return;
+        this.mode = mode;
+        onModeChanged(mode);
+    }
+
+    public TransporterEntity.TransportationMode getMode() {
+        return mode;
+    }
+
+    public void switchMode() {
+        setMode(getMode() == TransporterEntity.TransportationMode.INSERT ? TransporterEntity.TransportationMode.EXTRACT : TransporterEntity.TransportationMode.INSERT);
+    }
+}

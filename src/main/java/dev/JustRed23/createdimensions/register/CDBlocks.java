@@ -6,6 +6,7 @@ import com.tterrag.registrate.util.entry.BlockEntry;
 import dev.JustRed23.createdimensions.DimensionsAddon;
 import dev.JustRed23.createdimensions.blocks.FluidTransporter;
 import dev.JustRed23.createdimensions.blocks.ItemTransporter;
+import dev.JustRed23.createdimensions.blocks.RotationTransporter;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.MaterialColor;
 
@@ -38,14 +39,14 @@ public final class CDBlocks {
             .simpleItem()
             .register();
 
-//    public static final BlockEntry<RotationTransporter> ROTATION_TRANSPORTER = DimensionsAddon.registrate()
-//            .creativeModeTab(() -> CDCreativeTabs.MAIN)
-//            .block("dimensional_rotation_transporter", RotationTransporter::new)
-//            .properties(BlockBehaviour.Properties::noOcclusion)
-//			  .properties(p -> p.color(MaterialColor.PODZOL))
-//            .transform(BlockStressDefaults.setNoImpact())
-//            .transform(axeOrPickaxe())
-//            .initialProperties(SharedProperties::copperMetal)
-//            .simpleItem()
-//            .register();
+    public static final BlockEntry<RotationTransporter> ROTATION_TRANSPORTER = DimensionsAddon.registrate()
+            .creativeModeTab(() -> CDCreativeTabs.MAIN)
+            .block("dimensional_rotation_transporter", RotationTransporter::new)
+            .properties(BlockBehaviour.Properties::noOcclusion)
+            .properties(p -> p.color(MaterialColor.PODZOL))
+            .transform(BlockStressDefaults.setNoImpact())
+            .transform(pickaxeOnly())
+            .initialProperties(SharedProperties::copperMetal)
+            .simpleItem()
+            .register();
 }
