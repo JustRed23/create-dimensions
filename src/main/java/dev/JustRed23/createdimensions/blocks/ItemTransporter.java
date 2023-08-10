@@ -72,7 +72,7 @@ public class ItemTransporter extends HorizontalDirectionalBlock implements IBE<I
         return InteractionResult.PASS;
     }
 
-    public PushReaction getPistonPushReaction(BlockState pState) {
+    public @NotNull PushReaction getPistonPushReaction(@NotNull BlockState pState) {
         return PushReaction.BLOCK;
     }
 }

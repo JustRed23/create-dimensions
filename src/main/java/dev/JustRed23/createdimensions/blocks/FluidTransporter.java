@@ -72,7 +72,7 @@ public class FluidTransporter extends HorizontalDirectionalBlock implements IBE<
         return InteractionResult.PASS;
     }
 
-    public PushReaction getPistonPushReaction(BlockState pState) {
+    public @NotNull PushReaction getPistonPushReaction(@NotNull BlockState pState) {
         return PushReaction.BLOCK;
     }
 }
