@@ -52,8 +52,9 @@ public class RotationTransporterEntity extends KineticBlockEntity implements IHa
     }
 
     protected void onConnectionRemoved(boolean keepContents) {
-        clearKineticInformation();
-        setChanged();
+        detachKinetics();
+        removeSource();
+        notifyUpdate();
     }
 
     protected void onModeChanged(TransporterEntity.TransportationMode mode) {

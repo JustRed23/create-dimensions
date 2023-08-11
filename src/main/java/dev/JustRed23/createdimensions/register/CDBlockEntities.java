@@ -5,6 +5,8 @@ import dev.JustRed23.createdimensions.DimensionsAddon;
 import dev.JustRed23.createdimensions.blocks.blockentities.FluidTransporterEntity;
 import dev.JustRed23.createdimensions.blocks.blockentities.ItemTransporterEntity;
 import dev.JustRed23.createdimensions.blocks.blockentities.RotationTransporterEntity;
+import dev.JustRed23.createdimensions.blocks.blockentities.render.RotationTransporterInstance;
+import dev.JustRed23.createdimensions.blocks.blockentities.render.RotationTransporterRenderer;
 
 public final class CDBlockEntities {
 
@@ -23,6 +25,8 @@ public final class CDBlockEntities {
 
     public static final BlockEntityEntry<RotationTransporterEntity> ROTATION_TRANSPORTER = DimensionsAddon.registrate()
             .blockEntity("dimensional_rotation_transporter", RotationTransporterEntity::new)
+            .instance(() -> RotationTransporterInstance::new)
             .validBlock(CDBlocks.ROTATION_TRANSPORTER)
+            .renderer(() -> RotationTransporterRenderer::new)
             .register();
 }
