@@ -3,13 +3,21 @@
   "block.createdimensions.dimensional_fluid_transporter": "Dimensional Fluid Transporter",
   "block.createdimensions.dimensional_rotation_transporter": "Dimensional Rotation Transporter",
 
+  "createdimensions.gui.item_transporter.title": "Item Transporter",
+  "createdimensions.gui.fluid_transporter.title": "Fluid Transporter",
+
+  "createdimensions.gui.rotation_transporter.title": "Rotation Transporter",
+  "createdimensions.gui.rotation_transporter.no_network": "No network",
+  "createdimensions.gui.rotation_transporter.speed": "Network speed: %s",
+  "createdimensions.gui.rotation_transporter.stress": "Network stress: %s",
+
   "item.createdimensions.transporter_synchronizer_card": "Transporter Synchronizer Card",
   "item.createdimensions.transporter_chunk_upgrade": "Transporter Chunk Upgrade",
+
+  "itemGroup.createdimensions.main": "Create: Dimensions",
 
   "message.createdimensions.transporter.mode-changed": "Mode changed to: %s",
   "message.createdimensions.transporter_synchronizer_card.stored": "Stored connection data",
   "message.createdimensions.transporter_synchronizer_card.success": "Successfully synchronized transporters",
-  "message.createdimensions.transporter_synchronizer_card.fail": "Could not synchronize transporters: %s",
-
-  "itemGroup.createdimensions.main": "Create: Dimensions"
+  "message.createdimensions.transporter_synchronizer_card.fail": "Could not synchronize transporters: %s"
 }

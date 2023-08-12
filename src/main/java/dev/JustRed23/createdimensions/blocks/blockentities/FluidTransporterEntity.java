@@ -3,6 +3,10 @@ package dev.JustRed23.createdimensions.blocks.blockentities;
 import com.simibubi.create.content.equipment.goggles.IHaveGoggleInformation;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.foundation.blockEntity.behaviour.fluid.SmartFluidTankBehaviour;
+import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.foundation.utility.LangBuilder;
+import dev.JustRed23.createdimensions.DimensionsAddon;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -12,10 +16,12 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Optional;
 
 public class FluidTransporterEntity extends TransporterEntity implements IHaveGoggleInformation {
 
@@ -33,13 +39,64 @@ public class FluidTransporterEntity extends TransporterEntity implements IHaveGo
 
     @NotNull
     public <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
-        if (cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && side != Direction.DOWN && isConnected())
+        if (cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && isConnected())
             return tank.getCapability().cast();
         return super.getCapability(cap, side);
     }
 
     public boolean addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
-        return containedFluidTooltip(tooltip, isPlayerSneaking, getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY));
+        Optional<? extends IFluidHandler> resolve = tank.getCapability().resolve();
+        if (resolve.isEmpty())
+            return false;
+
+        IFluidHandler tank = resolve.get();
+        if (tank.getTanks() == 0)
+            return false;
+
+        LangBuilder mb = Lang.translate("generic.unit.millibuckets");
+        Lang.builder(DimensionsAddon.MODID).translate("gui.fluid_transporter.title")
+                .forGoggles(tooltip);
+
+        boolean isEmpty = true;
+        for (int i = 0; i < tank.getTanks(); i++) {
+            FluidStack fluidStack = tank.getFluidInTank(i);
+            if (fluidStack.isEmpty())
+                continue;
+
+            Lang.fluidName(fluidStack)
+                    .style(ChatFormatting.GRAY)
+                    .forGoggles(tooltip, 1);
+
+            Lang.builder()
+                    .add(Lang.number(fluidStack.getAmount())
+                            .add(mb)
+                            .style(ChatFormatting.GOLD))
+                    .text(ChatFormatting.GRAY, " / ")
+                    .add(Lang.number(tank.getTankCapacity(i))
+                            .add(mb)
+                            .style(ChatFormatting.DARK_GRAY))
+                    .forGoggles(tooltip, 1);
+
+            isEmpty = false;
+        }
+
+        if (tank.getTanks() > 1) {
+            if (isEmpty)
+                tooltip.remove(tooltip.size() - 1);
+            return true;
+        }
+
+        if (!isEmpty)
+            return true;
+
+        Lang.translate("gui.goggles.fluid_container.capacity")
+                .add(Lang.number(tank.getTankCapacity(0))
+                        .add(mb)
+                        .style(ChatFormatting.GOLD))
+                .style(ChatFormatting.GRAY)
+                .forGoggles(tooltip, 1);
+
+        return true;
     }
 
     protected boolean tryConnect(TransporterEntity blockEntity) {

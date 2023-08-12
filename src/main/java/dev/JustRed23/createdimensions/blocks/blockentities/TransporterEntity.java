@@ -33,11 +33,6 @@ public abstract class TransporterEntity extends SmartBlockEntity implements ISyn
         super(type, pos, state);
     }
 
-    public void initialize() {
-        super.initialize();
-        if (isConnected()) connectTo(connectedTo, dimension); // Attempt to reconnect with the data we got from nbt
-    }
-
     protected void read(CompoundTag tag, boolean clientPacket) {
         super.read(tag, clientPacket);
 

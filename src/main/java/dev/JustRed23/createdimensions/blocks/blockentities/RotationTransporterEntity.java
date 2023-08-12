@@ -1,10 +1,13 @@
 package dev.JustRed23.createdimensions.blocks.blockentities;
 
-import com.simibubi.create.content.equipment.goggles.IHaveGoggleInformation;
+import com.simibubi.create.content.equipment.goggles.IHaveHoveringInformation;
 import com.simibubi.create.content.kinetics.base.IRotate;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
+import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.NBTHelper;
+import dev.JustRed23.createdimensions.DimensionsAddon;
 import dev.JustRed23.createdimensions.behaviour.ISync;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
@@ -21,14 +24,42 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 import java.util.Objects;
 
-public class RotationTransporterEntity extends KineticBlockEntity implements IHaveGoggleInformation, ISync {
+public class RotationTransporterEntity extends KineticBlockEntity implements IHaveHoveringInformation, ISync {
 
     public RotationTransporterEntity(BlockEntityType<?> typeIn, BlockPos pos, BlockState state) {
         super(typeIn, pos, state);
     }
 
-    public boolean addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
-        return super.addToGoggleTooltip(tooltip, isPlayerSneaking);
+    public boolean addToTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
+        Lang.builder(DimensionsAddon.MODID).translate("gui.rotation_transporter.title")
+                .forGoggles(tooltip);
+
+        if (!hasNetwork()) {
+            Lang.builder(DimensionsAddon.MODID).translate("gui.rotation_transporter.no_network")
+                    .style(ChatFormatting.DARK_GRAY)
+                    .forGoggles(tooltip, 1);
+            return true;
+        }
+
+        Lang.builder(DimensionsAddon.MODID).translate("gui.rotation_transporter.speed")
+                .style(ChatFormatting.GREEN)
+                .add(Lang.number(Math.abs(getSpeed())).space().translate("generic.unit.rpm"))
+                .forGoggles(tooltip, 1);
+
+        Lang.builder(DimensionsAddon.MODID).translate("gui.rotation_transporter.stress")
+                .style(ChatFormatting.GOLD)
+                .add(
+                        Lang.number(stress)
+                                .translate("generic.unit.stress")
+                                .space().text("/").space()
+                                .add(
+                                        Lang.number(capacity)
+                                                .translate("generic.unit.stress")
+                                )
+                ).forGoggles(tooltip, 1);
+
+        super.addToTooltip(tooltip, isPlayerSneaking);
+        return true;
     }
 
     protected boolean tryConnect(RotationTransporterEntity other) {
@@ -45,9 +76,6 @@ public class RotationTransporterEntity extends KineticBlockEntity implements IHa
     }
 
     protected void trySyncContents(RotationTransporterEntity other) {
-        if (!other.getMode().equals(TransporterEntity.TransportationMode.EXTRACT))
-            return;
-
         other.notifyUpdate();
     }
 

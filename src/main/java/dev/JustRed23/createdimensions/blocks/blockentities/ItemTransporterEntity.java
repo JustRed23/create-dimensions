@@ -7,6 +7,7 @@ import com.simibubi.create.foundation.item.ItemHelper;
 import com.simibubi.create.foundation.item.SmartInventory;
 import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Lang;
+import dev.JustRed23.createdimensions.DimensionsAddon;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -56,6 +57,9 @@ public class ItemTransporterEntity extends TransporterEntity implements IHaveGog
 
     public boolean addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
         IItemHandlerModifiable items = itemCapability.orElse(new ItemStackHandler());
+
+        Lang.builder(DimensionsAddon.MODID).translate("gui.item_transporter.title")
+                .forGoggles(tooltip);
 
         boolean empty = true;
 
