@@ -1,44 +1,19 @@
 {
-  "multipart": [
-    {
-      "apply": {
-        "model": "createdimensions:block/transporters/item/block"
-      }
+  "variants": {
+    "facing=east": {
+      "model": "createdimensions:block/transporters/item/block",
+      "y": 270
     },
-    {
-      "when": {
-        "facing": "north"
-      },
-      "apply": {
-        "model": "createdimensions:block/transporters/item/chest"
-      }
+    "facing=north": {
+      "model": "createdimensions:block/transporters/item/block",
+      "y": 180
     },
-    {
-      "when": {
-        "facing": "east"
-      },
-      "apply": {
-        "model": "createdimensions:block/transporters/item/chest",
-        "y": 90
-      }
+    "facing=south": {
+      "model": "createdimensions:block/transporters/item/block"
     },
-    {
-      "when": {
-        "facing": "south"
-      },
-      "apply": {
-        "model": "createdimensions:block/transporters/item/chest",
-        "y": 180
-      }
-    },
-    {
-      "when": {
-        "facing": "west"
-      },
-      "apply": {
-        "model": "createdimensions:block/transporters/item/chest",
-        "y": 270
-      }
+    "facing=west": {
+      "model": "createdimensions:block/transporters/item/block",
+      "y": 90
     }
-  ]
+  }
 }
