@@ -2,17 +2,12 @@ package dev.JustRed23.createdimensions.blocks.blockentities.render;
 
 import com.jozufozu.flywheel.api.Instancer;
 import com.jozufozu.flywheel.api.MaterialManager;
-import com.jozufozu.flywheel.util.transform.TransformStack;
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Vector3f;
 import com.simibubi.create.AllPartialModels;
-import com.simibubi.create.content.kinetics.base.KineticBlockEntityRenderer;
 import com.simibubi.create.content.kinetics.base.SingleRotatingInstance;
 import com.simibubi.create.content.kinetics.base.flwdata.RotatingData;
 import com.simibubi.create.content.kinetics.simpleRelays.BracketedKineticBlockEntityRenderer;
 import dev.JustRed23.createdimensions.blocks.blockentities.RotationTransporterEntity;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
+import dev.JustRed23.createdimensions.register.CBPartialModels;
 
 public class RotationTransporterInstance extends SingleRotatingInstance<RotationTransporterEntity> {
 
@@ -26,16 +21,8 @@ public class RotationTransporterInstance extends SingleRotatingInstance<Rotation
     public void init() {
         super.init();
 
-        float speed = blockEntity.getSpeed();
-        Direction.Axis axis = Direction.Axis.Y;
-        BlockPos pos = blockEntity.getBlockPos();
-        float offset = BracketedKineticBlockEntityRenderer.getShaftAngleOffset(axis, pos);
-        Direction facing = Direction.DOWN;
-        Instancer<RotatingData> half = getRotatingMaterial().getModel(AllPartialModels.SHAFT_HALF, blockState, facing);
-
-        additionalShaft = setup(half.createInstance(), speed);
-        additionalShaft.setPosition(pos.getX(), pos.getY() + 0.25f, pos.getZ());
-        additionalShaft.setRotationOffset(offset);
+        Instancer<RotatingData> shaft = getRotatingMaterial().getModel(CBPartialModels.ROTATION_TRANSPORTER_SHAFT, blockState);
+        additionalShaft = setup(shaft.createInstance(), blockEntity.getSpeed());
     }
 
     @Override

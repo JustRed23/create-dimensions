@@ -2,10 +2,7 @@ package dev.JustRed23.createdimensions;
 
 import com.mojang.logging.LogUtils;
 import com.simibubi.create.foundation.data.CreateRegistrate;
-import dev.JustRed23.createdimensions.register.CDBlockEntities;
-import dev.JustRed23.createdimensions.register.CDBlocks;
-import dev.JustRed23.createdimensions.register.CDCreativeTabs;
-import dev.JustRed23.createdimensions.register.CDItems;
+import dev.JustRed23.createdimensions.register.*;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -37,6 +34,7 @@ public class DimensionsAddon {
 
     private void registerStuff(IEventBus modEventBus) {
         CDCreativeTabs.init();
+        CBPartialModels.init();
         CDBlockEntities.init();
         CDBlocks.init();
         CDItems.init();
