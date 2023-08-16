@@ -4,10 +4,27 @@
 		"0": "create:block/brass_casing_connected",
 		"1": "block/obsidian",
 		"2": "block/nether_portal",
-		"3": "createdimensions:block/chest-mini",
+		"3": "createdimensions:block/glass-mini",
 		"particle": "create:block/brass_casing"
 	},
 	"elements": [
+		{
+			"name": "Portal",
+			"from": [4, 13.9, 4],
+			"to": [12, 14.9, 12],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 0, 8]},
+			"faces": {
+				"down": {"uv": [4, 4, 12, 12], "texture": "#2"}
+			}
+		},
+		{
+			"name": "Obsidian",
+			"from": [2, 14, 2],
+			"to": [14, 15, 14],
+			"faces": {
+				"down": {"uv": [2, 2, 14, 14], "texture": "#1"}
+			}
+		},
 		{
 			"name": "Portal",
 			"from": [4, 1.1, 4],
@@ -18,25 +35,11 @@
 			}
 		},
 		{
-			"name": "Nudge",
-			"from": [7, 8, 13.99],
-			"to": [9, 11, 14.99],
+			"name": "Obsidian",
+			"from": [2, 1, 2],
+			"to": [14, 2, 14],
 			"faces": {
-				"north": {"uv": [11, 10.5, 12, 12], "texture": "#3"}
-			}
-		},
-		{
-			"name": "Chest",
-			"from": [14, 14, 14],
-			"to": [2, 2, 2],
-			"rotation": {"angle": 0, "axis": "y", "origin": [8, 0, 8]},
-			"faces": {
-				"north": {"uv": [0, 6, 6, 12], "rotation": 180, "texture": "#3"},
-				"east": {"uv": [6, 0, 12, 6], "rotation": 180, "texture": "#3"},
-				"south": {"uv": [6, 0, 12, 6], "rotation": 180, "texture": "#3"},
-				"west": {"uv": [6, 0, 12, 6], "rotation": 180, "texture": "#3"},
-				"up": {"uv": [2, 2, 14, 14], "rotation": 180, "texture": "#1"},
-				"down": {"uv": [0, 0, 6, 6], "rotation": 180, "texture": "#3"}
+				"up": {"uv": [2, 2, 14, 14], "texture": "#1"}
 			}
 		},
 		{
@@ -178,17 +181,42 @@
 				"up": {"uv": [0, 0.25, 0.25, 1.75], "texture": "#0"},
 				"down": {"uv": [0.25, 0.25, 1.75, 0.5], "rotation": 270, "texture": "#0"}
 			}
+		},
+		{
+			"from": [14, 14, 14],
+			"to": [2, 2, 2],
+			"faces": {
+				"north": {"uv": [0, 0, 12, 12], "texture": "#3"},
+				"east": {"uv": [0, 0, 12, 12], "texture": "#3"},
+				"south": {"uv": [0, 0, 12, 12], "texture": "#3"},
+				"west": {"uv": [0, 0, 12, 12], "texture": "#3"}
+			}
 		}
 	],
 	"groups": [
-		0,
-		1,
-		2,
+		{
+			"name": "PortalTop",
+			"origin": [8, 8, 8],
+			"color": 0,
+			"children": [0, 1]
+		},
+		{
+			"name": "PortalBottom",
+			"origin": [8, 8, 8],
+			"color": 0,
+			"children": [2, 3]
+		},
 		{
 			"name": "Casing",
 			"origin": [8, 0, 8],
 			"color": 0,
-			"children": [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
+			"children": [4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
+		},
+		{
+			"name": "Panes",
+			"origin": [8, 8, 8],
+			"color": 0,
+			"children": [16]
 		}
 	]
 }

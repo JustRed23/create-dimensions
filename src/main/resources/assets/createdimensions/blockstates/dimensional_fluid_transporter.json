@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "createdimensions:block/transporters/fluid/block"
+    }
+  }
+}

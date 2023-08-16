@@ -11,6 +11,7 @@ import dev.JustRed23.createdimensions.DimensionsAddon;
 import dev.JustRed23.createdimensions.blocks.FluidTransporter;
 import dev.JustRed23.createdimensions.blocks.ItemTransporter;
 import dev.JustRed23.createdimensions.blocks.RotationTransporter;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.MaterialColor;
@@ -27,7 +28,9 @@ public final class CDBlocks {
             createTransporter("dimensional_item_transporter", ItemTransporter::new).register();
 
     public static final BlockEntry<FluidTransporter> FLUID_TRANSPORTER =
-            createTransporter("dimensional_fluid_transporter", FluidTransporter::new).register();
+            createTransporter("dimensional_fluid_transporter", FluidTransporter::new)
+                    .addLayer(() -> RenderType::cutoutMipped)
+                    .register();
 
     public static final BlockEntry<RotationTransporter> ROTATION_TRANSPORTER =
             createTransporter("dimensional_rotation_transporter", RotationTransporter::new).register();
