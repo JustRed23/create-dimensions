@@ -130,6 +130,14 @@ public class ItemTransporterEntity extends TransporterEntity implements IHaveGog
         setChanged();
     }
 
+    protected void dropContents() {
+        if (!upgradeInventory.isEmpty())
+            ItemHelper.dropContents(getLevel(), getBlockPos(), upgradeInventory);
+
+        if (!syncInventory.isEmpty())
+            ItemHelper.dropContents(getLevel(), getBlockPos(), syncInventory);
+    }
+
     protected void onModeChanged(TransportationMode mode) {
         switch (mode) {
             case INSERT -> {

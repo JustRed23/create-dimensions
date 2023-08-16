@@ -27,6 +27,7 @@ public abstract class TransporterEntity extends SmartBlockEntity implements ISyn
     protected abstract boolean tryConnect(TransporterEntity blockEntity);
     protected abstract void trySyncContents(TransporterEntity blockEntity);
     protected abstract void onConnectionRemoved(boolean keepContents);
+    protected void dropContents() {}
     protected abstract void onModeChanged(TransportationMode mode);
 
     public TransporterEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
@@ -135,7 +136,10 @@ public abstract class TransporterEntity extends SmartBlockEntity implements ISyn
     }
 
     public void clearConnection(boolean keepContents, boolean keepBoth) {
-        if (!isConnected()) return;
+        if (!isConnected()) {
+            dropContents();
+            return;
+        }
 
         ServerLevel dimensionLevel = level.getServer().getLevel(this.dimension);
         if (dimensionLevel == null) return;
