@@ -10,6 +10,7 @@ import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.context.UseOnContext;
@@ -80,10 +81,6 @@ public class ItemTransporter extends HorizontalDirectionalBlock implements IBE<I
         return InteractionResult.PASS;
     }
 
-    public @NotNull PushReaction getPistonPushReaction(@NotNull BlockState pState) {
-        return PushReaction.BLOCK;
-    }
-
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> pBuilder) {
         pBuilder.add(FACING);
         super.createBlockStateDefinition(pBuilder);
@@ -96,5 +93,19 @@ public class ItemTransporter extends HorizontalDirectionalBlock implements IBE<I
 
     public int getLightEmission(BlockState state, BlockGetter level, BlockPos pos) {
         return 5;
+    }
+
+    public @NotNull PushReaction getPistonPushReaction(@NotNull BlockState pState) {
+        return PushReaction.BLOCK;
+    }
+
+    public boolean hasAnalogOutputSignal(@NotNull BlockState pState) {
+        return true;
+    }
+
+    public int getAnalogOutputSignal(@NotNull BlockState pBlockState, @NotNull Level pLevel, @NotNull BlockPos pPos) {
+        return getBlockEntityOptional(pLevel, pPos)
+                .map(be -> AbstractContainerMenu.getRedstoneSignalFromContainer(be.getSyncInventory()))
+                .orElse(0);
     }
 }

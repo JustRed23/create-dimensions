@@ -15,6 +15,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -72,6 +73,10 @@ public class RotationTransporter extends HorizontalKineticBlock implements IBE<R
         }
 
         return InteractionResult.PASS;
+    }
+
+    public int getLightEmission(BlockState state, BlockGetter level, BlockPos pos) {
+        return 5;
     }
 
     public @NotNull PushReaction getPistonPushReaction(@NotNull BlockState pState) {

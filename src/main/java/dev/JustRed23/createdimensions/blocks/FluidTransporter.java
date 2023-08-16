@@ -13,6 +13,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -73,15 +74,19 @@ public class FluidTransporter extends HorizontalDirectionalBlock implements IBE<
         return InteractionResult.PASS;
     }
 
+    public int getLightEmission(BlockState state, BlockGetter level, BlockPos pos) {
+        return 5;
+    }
+
+    public @NotNull PushReaction getPistonPushReaction(@NotNull BlockState pState) {
+        return PushReaction.BLOCK;
+    }
+
     public boolean hasAnalogOutputSignal(@NotNull BlockState pState) {
         return true;
     }
 
     public int getAnalogOutputSignal(@NotNull BlockState blockState, @NotNull Level pWorld, @NotNull BlockPos pPos) {
         return ComparatorUtil.levelOfSmartFluidTank(pWorld, pPos);
-    }
-
-    public @NotNull PushReaction getPistonPushReaction(@NotNull BlockState pState) {
-        return PushReaction.BLOCK;
     }
 }
