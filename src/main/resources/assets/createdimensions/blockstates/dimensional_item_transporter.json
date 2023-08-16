@@ -1,19 +1,19 @@
 {
   "variants": {
+    "facing=north": {
+      "model": "createdimensions:block/transporters/item/block"
+    },
     "facing=east": {
       "model": "createdimensions:block/transporters/item/block",
-      "y": 270
+      "y": 90
     },
-    "facing=north": {
+    "facing=south": {
       "model": "createdimensions:block/transporters/item/block",
       "y": 180
     },
-    "facing=south": {
-      "model": "createdimensions:block/transporters/item/block"
-    },
     "facing=west": {
       "model": "createdimensions:block/transporters/item/block",
-      "y": 90
+      "y": 270
     }
   }
 }
