@@ -2,6 +2,7 @@ package dev.JustRed23.createdimensions.blocks;
 
 import com.simibubi.create.content.equipment.wrench.IWrenchable;
 import com.simibubi.create.foundation.block.IBE;
+import com.simibubi.create.foundation.blockEntity.ComparatorUtil;
 import dev.JustRed23.createdimensions.blocks.blockentities.FluidTransporterEntity;
 import dev.JustRed23.createdimensions.register.CDBlockEntities;
 import net.minecraft.core.BlockPos;
@@ -70,6 +71,14 @@ public class FluidTransporter extends HorizontalDirectionalBlock implements IBE<
         }
 
         return InteractionResult.PASS;
+    }
+
+    public boolean hasAnalogOutputSignal(@NotNull BlockState pState) {
+        return true;
+    }
+
+    public int getAnalogOutputSignal(@NotNull BlockState blockState, @NotNull Level pWorld, @NotNull BlockPos pPos) {
+        return ComparatorUtil.levelOfSmartFluidTank(pWorld, pPos);
     }
 
     public @NotNull PushReaction getPistonPushReaction(@NotNull BlockState pState) {

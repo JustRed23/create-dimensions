@@ -3,8 +3,10 @@ package dev.JustRed23.createdimensions.blocks.blockentities;
 import com.simibubi.create.content.equipment.goggles.IHaveGoggleInformation;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.foundation.blockEntity.behaviour.fluid.SmartFluidTankBehaviour;
+import com.simibubi.create.foundation.fluid.SmartFluidTank;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.LangBuilder;
+import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 import dev.JustRed23.createdimensions.DimensionsAddon;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
@@ -140,5 +142,13 @@ public class FluidTransporterEntity extends TransporterEntity implements IHaveGo
             }
         }
         setChanged();
+    }
+
+    public LerpedFloat getFluidLevel() {
+        return tank.getPrimaryTank().getFluidLevel();
+    }
+
+    public SmartFluidTank getTank() {
+        return tank.getPrimaryHandler();
     }
 }
