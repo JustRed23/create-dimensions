@@ -97,7 +97,7 @@ public abstract class TransporterEntity extends SmartBlockEntity implements ISyn
         if (pos == null || dimension == null) return ConnectionStatus.INVALID_DATA;
         if (Objects.equals(dimension, this.dimension) && Objects.equals(pos, this.connectedTo)) return ConnectionStatus.ALREADY_CONNECTED; // Already connected to this block
 
-        if (Objects.equals(getBlockPos(), pos) && Objects.equals(getLevel(), dimension))
+        if (Objects.equals(getBlockPos(), pos) && Objects.equals(getLevel().dimension(), dimension))
             return ConnectionStatus.CANNOT_CONNECT_TO_SELF;
 
         ServerLevel dimensionLevel = getLevel().getServer().getLevel(dimension);

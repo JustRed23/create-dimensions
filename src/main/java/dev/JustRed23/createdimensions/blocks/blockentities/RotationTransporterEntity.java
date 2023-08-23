@@ -201,7 +201,7 @@ public class RotationTransporterEntity extends KineticBlockEntity implements IHa
         if (pos == null || dimension == null) return TransporterEntity.ConnectionStatus.INVALID_DATA;
         if (Objects.equals(dimension, this.dimension) && Objects.equals(pos, this.connectedTo)) return TransporterEntity.ConnectionStatus.ALREADY_CONNECTED; // Already connected to this block
 
-        if (Objects.equals(getBlockPos(), pos) && Objects.equals(getLevel(), dimension))
+        if (Objects.equals(getBlockPos(), pos) && Objects.equals(getLevel().dimension(), dimension))
             return TransporterEntity.ConnectionStatus.CANNOT_CONNECT_TO_SELF;
 
         ServerLevel dimensionLevel = getLevel().getServer().getLevel(dimension);
