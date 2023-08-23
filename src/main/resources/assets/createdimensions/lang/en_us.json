@@ -28,8 +28,12 @@
   "itemGroup.createdimensions.main": "Create: Dimensions",
 
   "message.createdimensions.transporter.mode-changed": "Mode changed to: %s",
-  "message.createdimensions.transporter_synchronizer_card.stored": "Stored connection data",
   "message.createdimensions.transporter_synchronizer_card.cleared": "Cleared connection data",
-  "message.createdimensions.transporter_synchronizer_card.success": "Successfully connected transporters",
-  "message.createdimensions.transporter_synchronizer_card.fail": "Could not connect transporters: %s"
+
+  "tooltip.createdimensions.transporter_synchronizer_card": "Right-click on a transporter to store its connection data",
+  "tooltip.createdimensions.transporter_synchronizer_card.stored": "Stored connection data:",
+  "tooltip.createdimensions.transporter_synchronizer_card.block": "Block: %s",
+  "tooltip.createdimensions.transporter_synchronizer_card.level": "Level: %s",
+  "tooltip.createdimensions.transporter_synchronizer_card.pos": "Position: %s",
+  "tooltip.createdimensions.transporter_chunk_upgrade": "Loads the chunk the transporter is in when placed in a transporter"
 }
