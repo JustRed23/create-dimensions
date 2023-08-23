@@ -25,6 +25,7 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -80,7 +81,7 @@ public class SynchronizerCard extends Item {
         return InteractionResult.PASS;
     }
 
-    public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
+    public void appendHoverText(@NotNull ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, @NotNull TooltipFlag pIsAdvanced) {
         pTooltipComponents.add(Components.translatable("tooltip.createdimensions.transporter_synchronizer_card").withStyle(ChatFormatting.DARK_GRAY));
         if (hasStoredData(pStack)) {
             CompoundTag data = pStack.getTag().getCompound("RemoteConnection");
