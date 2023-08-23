@@ -26,6 +26,8 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
+import static dev.JustRed23.createdimensions.utils.ItemUtils.isHoldingSynchronizerCard;
+
 public class ItemTransporterEntity extends TransporterEntity implements IHaveGoggleInformation {
 
     private final SmartInventory upgradeInventory;
@@ -56,6 +58,9 @@ public class ItemTransporterEntity extends TransporterEntity implements IHaveGog
     }
 
     public boolean addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
+        if (isHoldingSynchronizerCard())
+            return false;
+
         IItemHandlerModifiable items = itemCapability.orElse(new ItemStackHandler());
 
         Lang.builder(DimensionsAddon.MODID).translate("gui.item_transporter.title")
@@ -127,7 +132,6 @@ public class ItemTransporterEntity extends TransporterEntity implements IHaveGog
             if (!upgradeInventory.isEmpty())
                 ItemHelper.dropContents(getLevel(), getBlockPos(), upgradeInventory);
         }
-        setChanged();
     }
 
     protected void dropContents() {

@@ -37,37 +37,36 @@ public abstract class TransporterEntity extends SmartBlockEntity implements ISyn
     protected void read(CompoundTag tag, boolean clientPacket) {
         super.read(tag, clientPacket);
 
-        if (!clientPacket) {
-            if (!tag.contains("RemoteConnection"))
-                return;
-
-            CompoundTag connectionTag = tag.getCompound("RemoteConnection");
-            if (!connectionTag.contains("pos") || !connectionTag.contains("dimension"))
-                return;
-
-            int[] pos = connectionTag.getIntArray("pos");
-            connectedTo = new BlockPos(pos[0], pos[1], pos[2]);
-
-            dimension = ResourceKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation(connectionTag.getString("dimension")));
+        if (tag.contains("Mode")) {
+            mode = NBTHelper.readEnum(tag, "Mode", TransportationMode.class);
+            onModeChanged(mode);
         }
 
-        mode = NBTHelper.readEnum(tag, "Mode", TransportationMode.class);
-        onModeChanged(mode); // Actually update the mode
+        if (!tag.contains("RemoteConnection")) {
+            this.connectedTo = null;
+            this.dimension = null;
+            return;
+        }
+
+        CompoundTag connectionTag = tag.getCompound("RemoteConnection");
+        if (!connectionTag.contains("pos") || !connectionTag.contains("dimension"))
+            return;
+
+        int[] pos = connectionTag.getIntArray("pos");
+        connectedTo = new BlockPos(pos[0], pos[1], pos[2]);
+        dimension = ResourceKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation(connectionTag.getString("dimension")));
     }
 
     protected void write(CompoundTag tag, boolean clientPacket) {
         super.write(tag, clientPacket);
 
-        if (!clientPacket) {
-            if (!isConnected()) return;
-
-            CompoundTag connectionTag = new CompoundTag();
-            connectionTag.putIntArray("pos", new int[]{connectedTo.getX(), connectedTo.getY(), connectedTo.getZ()});
-            connectionTag.putString("dimension", dimension.location().toString());
-            tag.put("RemoteConnection", connectionTag);
-        }
-
         NBTHelper.writeEnum(tag, "Mode", mode);
+
+        if (!isConnected()) return;
+        CompoundTag connectionTag = new CompoundTag();
+        connectionTag.putIntArray("pos", new int[]{connectedTo.getX(), connectedTo.getY(), connectedTo.getZ()});
+        connectionTag.putString("dimension", dimension.location().toString());
+        tag.put("RemoteConnection", connectionTag);
     }
 
     public void destroy() {
@@ -117,6 +116,9 @@ public abstract class TransporterEntity extends SmartBlockEntity implements ISyn
         other.connectedTo = getBlockPos();
         other.dimension = getLevel().dimension();
 
+        this.notifyUpdate();
+        other.notifyUpdate();
+
         syncWithConnected();
         return ConnectionStatus.SUCCESS;
     }
@@ -129,6 +131,7 @@ public abstract class TransporterEntity extends SmartBlockEntity implements ISyn
         this.connectedTo = null;
         this.dimension = null;
         onConnectionRemoved(keepContents);
+        notifyUpdate();
     }
 
     public void clearConnection(boolean keepContents) {
@@ -173,7 +176,7 @@ public abstract class TransporterEntity extends SmartBlockEntity implements ISyn
     }
 
     public enum TransportationMode {
-        EXTRACT, INSERT
+        INSERT, EXTRACT
     }
 
     public enum ConnectionStatus {

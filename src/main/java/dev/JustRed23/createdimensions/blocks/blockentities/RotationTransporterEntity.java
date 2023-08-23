@@ -24,6 +24,8 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 import java.util.Objects;
 
+import static dev.JustRed23.createdimensions.utils.ItemUtils.isHoldingSynchronizerCard;
+
 public class RotationTransporterEntity extends KineticBlockEntity implements IHaveHoveringInformation, ISync {
 
     public RotationTransporterEntity(BlockEntityType<?> typeIn, BlockPos pos, BlockState state) {
@@ -31,6 +33,9 @@ public class RotationTransporterEntity extends KineticBlockEntity implements IHa
     }
 
     public boolean addToTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
+        if (isHoldingSynchronizerCard())
+            return false;
+
         Lang.builder(DimensionsAddon.MODID).translate("gui.rotation_transporter.title")
                 .forGoggles(tooltip);
 
@@ -82,7 +87,6 @@ public class RotationTransporterEntity extends KineticBlockEntity implements IHa
     protected void onConnectionRemoved(boolean keepContents) {
         detachKinetics();
         removeSource();
-        notifyUpdate();
     }
 
     protected void onModeChanged(TransporterEntity.TransportationMode mode) {
@@ -137,37 +141,36 @@ public class RotationTransporterEntity extends KineticBlockEntity implements IHa
     protected void read(CompoundTag tag, boolean clientPacket) {
         super.read(tag, clientPacket);
 
-        if (!clientPacket) {
-            if (!tag.contains("RemoteConnection"))
-                return;
-
-            CompoundTag connectionTag = tag.getCompound("RemoteConnection");
-            if (!connectionTag.contains("pos") || !connectionTag.contains("dimension"))
-                return;
-
-            int[] pos = connectionTag.getIntArray("pos");
-            connectedTo = new BlockPos(pos[0], pos[1], pos[2]);
-
-            dimension = ResourceKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation(connectionTag.getString("dimension")));
+        if (tag.contains("Mode")) {
+            mode = NBTHelper.readEnum(tag, "Mode", TransporterEntity.TransportationMode.class);
+            onModeChanged(mode);
         }
 
-        mode = NBTHelper.readEnum(tag, "Mode", TransporterEntity.TransportationMode.class);
-        onModeChanged(mode); // Actually update the mode
+        if (!tag.contains("RemoteConnection")) {
+            this.connectedTo = null;
+            this.dimension = null;
+            return;
+        }
+
+        CompoundTag connectionTag = tag.getCompound("RemoteConnection");
+        if (!connectionTag.contains("pos") || !connectionTag.contains("dimension"))
+            return;
+
+        int[] pos = connectionTag.getIntArray("pos");
+        connectedTo = new BlockPos(pos[0], pos[1], pos[2]);
+        dimension = ResourceKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation(connectionTag.getString("dimension")));
     }
 
     protected void write(CompoundTag tag, boolean clientPacket) {
         super.write(tag, clientPacket);
 
-        if (!clientPacket) {
-            if (!isConnected()) return;
-
-            CompoundTag connectionTag = new CompoundTag();
-            connectionTag.putIntArray("pos", new int[]{connectedTo.getX(), connectedTo.getY(), connectedTo.getZ()});
-            connectionTag.putString("dimension", dimension.location().toString());
-            tag.put("RemoteConnection", connectionTag);
-        }
-
         NBTHelper.writeEnum(tag, "Mode", mode);
+
+        if (!isConnected()) return;
+        CompoundTag connectionTag = new CompoundTag();
+        connectionTag.putIntArray("pos", new int[]{connectedTo.getX(), connectedTo.getY(), connectedTo.getZ()});
+        connectionTag.putString("dimension", dimension.location().toString());
+        tag.put("RemoteConnection", connectionTag);
     }
 
     public void destroy() {
@@ -217,6 +220,9 @@ public class RotationTransporterEntity extends KineticBlockEntity implements IHa
         other.connectedTo = getBlockPos();
         other.dimension = getLevel().dimension();
 
+        this.notifyUpdate();
+        other.notifyUpdate();
+
         syncWithConnected();
         return TransporterEntity.ConnectionStatus.SUCCESS;
     }
@@ -229,6 +235,7 @@ public class RotationTransporterEntity extends KineticBlockEntity implements IHa
         this.connectedTo = null;
         this.dimension = null;
         onConnectionRemoved(keepContents);
+        notifyUpdate();
     }
 
     public void clearConnection(boolean keepContents) {

@@ -25,6 +25,8 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.Optional;
 
+import static dev.JustRed23.createdimensions.utils.ItemUtils.isHoldingSynchronizerCard;
+
 public class FluidTransporterEntity extends TransporterEntity implements IHaveGoggleInformation {
 
     private SmartFluidTankBehaviour tank;
@@ -47,6 +49,9 @@ public class FluidTransporterEntity extends TransporterEntity implements IHaveGo
     }
 
     public boolean addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
+        if (isHoldingSynchronizerCard())
+            return false;
+
         Optional<? extends IFluidHandler> resolve = tank.getCapability().resolve();
         if (resolve.isEmpty())
             return false;
@@ -127,7 +132,6 @@ public class FluidTransporterEntity extends TransporterEntity implements IHaveGo
     protected void onConnectionRemoved(boolean keepContents) {
         if (!keepContents)
             tank.getPrimaryHandler().setFluid(FluidStack.EMPTY);
-        setChanged();
     }
 
     protected void onModeChanged(TransportationMode mode) {
