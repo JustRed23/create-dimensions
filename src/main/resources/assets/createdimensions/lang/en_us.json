@@ -5,11 +5,22 @@
 
   "createdimensions.gui.item_transporter.title": "Item Transporter",
   "createdimensions.gui.fluid_transporter.title": "Fluid Transporter",
-
   "createdimensions.gui.rotation_transporter.title": "Rotation Transporter",
+
   "createdimensions.gui.rotation_transporter.no_network": "No network",
   "createdimensions.gui.rotation_transporter.speed": "Network speed: %s",
   "createdimensions.gui.rotation_transporter.stress": "Network stress: %s",
+  "createdimensions.gui.transporter.connected": "Connected",
+  "createdimensions.gui.transporter.connected.to": "Connected to [%s] in %s",
+  "createdimensions.gui.transporter.not_connected": "Not Connected",
+  "createdimensions.gui.transporter.stored_connection": "Connection data stored in synchronizer card",
+  "createdimensions.gui.transporter.right_click_to_connect": "Right-click to connect",
+  "createdimensions.gui.transporter.error.invalid_data": "Unable to connect: Invalid data",
+  "createdimensions.gui.transporter.error.already_connected": "Unable to connect: Already connected to this block",
+  "createdimensions.gui.transporter.error.cannot_connect_to_self": "Unable to connect: Cannot connect to self",
+  "createdimensions.gui.transporter.error.invalid_level": "Unable to connect: Invalid world",
+  "createdimensions.gui.transporter.error.invalid_block": "Unable to connect: Invalid block type",
+  "createdimensions.gui.transporter.error.connect_failure": "Unable to connect: Something went wrong while trying to sync block contents",
 
   "item.createdimensions.transporter_synchronizer_card": "Transporter Synchronizer Card",
   "item.createdimensions.transporter_chunk_upgrade": "Transporter Chunk Upgrade",
@@ -18,6 +29,7 @@
 
   "message.createdimensions.transporter.mode-changed": "Mode changed to: %s",
   "message.createdimensions.transporter_synchronizer_card.stored": "Stored connection data",
-  "message.createdimensions.transporter_synchronizer_card.success": "Successfully synchronized transporters",
-  "message.createdimensions.transporter_synchronizer_card.fail": "Could not synchronize transporters: %s"
+  "message.createdimensions.transporter_synchronizer_card.cleared": "Cleared connection data",
+  "message.createdimensions.transporter_synchronizer_card.success": "Successfully connected transporters",
+  "message.createdimensions.transporter_synchronizer_card.fail": "Could not connect transporters: %s"
 }

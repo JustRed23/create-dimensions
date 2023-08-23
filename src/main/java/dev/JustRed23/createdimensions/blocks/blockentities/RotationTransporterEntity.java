@@ -11,6 +11,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -156,8 +157,7 @@ public class RotationTransporterEntity extends KineticBlockEntity implements IHa
         if (!connectionTag.contains("pos") || !connectionTag.contains("dimension"))
             return;
 
-        int[] pos = connectionTag.getIntArray("pos");
-        connectedTo = new BlockPos(pos[0], pos[1], pos[2]);
+        connectedTo = NbtUtils.readBlockPos(connectionTag.getCompound("pos"));
         dimension = ResourceKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation(connectionTag.getString("dimension")));
     }
 
@@ -168,7 +168,7 @@ public class RotationTransporterEntity extends KineticBlockEntity implements IHa
 
         if (!isConnected()) return;
         CompoundTag connectionTag = new CompoundTag();
-        connectionTag.putIntArray("pos", new int[]{connectedTo.getX(), connectedTo.getY(), connectedTo.getZ()});
+        connectionTag.put("pos", NbtUtils.writeBlockPos(connectedTo));
         connectionTag.putString("dimension", dimension.location().toString());
         tag.put("RemoteConnection", connectionTag);
     }

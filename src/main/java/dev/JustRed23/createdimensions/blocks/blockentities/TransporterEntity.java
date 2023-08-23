@@ -6,6 +6,7 @@ import dev.JustRed23.createdimensions.behaviour.ISync;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtUtils;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
@@ -52,8 +53,7 @@ public abstract class TransporterEntity extends SmartBlockEntity implements ISyn
         if (!connectionTag.contains("pos") || !connectionTag.contains("dimension"))
             return;
 
-        int[] pos = connectionTag.getIntArray("pos");
-        connectedTo = new BlockPos(pos[0], pos[1], pos[2]);
+        connectedTo = NbtUtils.readBlockPos(connectionTag.getCompound("pos"));
         dimension = ResourceKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation(connectionTag.getString("dimension")));
     }
 
@@ -64,7 +64,7 @@ public abstract class TransporterEntity extends SmartBlockEntity implements ISyn
 
         if (!isConnected()) return;
         CompoundTag connectionTag = new CompoundTag();
-        connectionTag.putIntArray("pos", new int[]{connectedTo.getX(), connectedTo.getY(), connectedTo.getZ()});
+        connectionTag.put("pos", NbtUtils.writeBlockPos(connectedTo));
         connectionTag.putString("dimension", dimension.location().toString());
         tag.put("RemoteConnection", connectionTag);
     }
@@ -104,7 +104,7 @@ public abstract class TransporterEntity extends SmartBlockEntity implements ISyn
         if (dimensionLevel == null) return ConnectionStatus.INVALID_LEVEL;
 
         final BlockEntity blockEntity = dimensionLevel.getBlockEntity(pos);
-        if (!(blockEntity instanceof TransporterEntity other))
+        if (!(blockEntity instanceof TransporterEntity other) || !this.getClass().equals(other.getClass()))
             return ConnectionStatus.INVALID_BLOCK;
 
         if (!tryConnect(other))
@@ -180,26 +180,6 @@ public abstract class TransporterEntity extends SmartBlockEntity implements ISyn
     }
 
     public enum ConnectionStatus {
-        INVALID_DATA("provided data is invalid"),
-        ALREADY_CONNECTED("already connected to this block"),
-        CANNOT_CONNECT_TO_SELF("cannot connect to self"),
-        INVALID_LEVEL("invalid world"),
-        INVALID_BLOCK("invalid block"),
-        CONNECT_FAILURE("something went wrong while trying to sync"),
-        SUCCESS;
-
-        final String description;
-
-        ConnectionStatus() {
-            this("");
-        }
-
-        ConnectionStatus(String description) {
-            this.description = description;
-        }
-
-        public String description() {
-            return description;
-        }
+        INVALID_DATA, ALREADY_CONNECTED, CANNOT_CONNECT_TO_SELF, INVALID_LEVEL, INVALID_BLOCK, CONNECT_FAILURE, SUCCESS;
     }
 }
