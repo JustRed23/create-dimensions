@@ -23,7 +23,7 @@
   "createdimensions.gui.transporter.error.invalid_block": "Unable to connect: Invalid block type",
   "createdimensions.gui.transporter.error.connect_failure": "Unable to connect: Something went wrong while trying to sync block contents",
 
-  "item.createdimensions.transporter_synchronizer_card": "Transporter Synchronizer Card",
+  "item.createdimensions.transporter_synchronizer": "Transporter Synchronizer",
   "item.createdimensions.transporter_chunk_upgrade": "Transporter Chunk Upgrade",
 
   "itemGroup.createdimensions.main": "Create: Dimensions",

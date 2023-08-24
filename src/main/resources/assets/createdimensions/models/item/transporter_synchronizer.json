@@ -1,0 +1,87 @@
+{
+	"credit": "Made with Blockbench",
+	"parent": "block/block",
+	"textures": {
+		"0": "createdimensions:item/transporter_synchronizer/base",
+		"particle": "createdimensions:item/transporter_synchronizer/base"
+	},
+	"elements": [
+		{
+			"name": "antenna",
+			"from": [6, 0, 11],
+			"to": [7, 1, 14],
+			"faces": {
+				"east": {"uv": [12, 16, 13, 13], "rotation": 90, "texture": "#0"},
+				"south": {"uv": [15, 13, 16, 14], "texture": "#0"},
+				"west": {"uv": [14, 13, 15, 16], "rotation": 90, "texture": "#0"},
+				"up": {"uv": [11, 13, 12, 16], "rotation": 180, "texture": "#0"},
+				"down": {"uv": [13, 13, 14, 16], "texture": "#0"}
+			}
+		},
+		{
+			"name": "base",
+			"from": [5, 0, 5],
+			"to": [11, 1, 11],
+			"rotation": {"angle": 0, "axis": "y", "origin": [4, 1, 4]},
+			"faces": {
+				"north": {"uv": [1, 7, 7, 8], "texture": "#0"},
+				"east": {"uv": [0, 1, 1, 7], "rotation": 90, "texture": "#0"},
+				"south": {"uv": [1, 0, 7, 1], "texture": "#0"},
+				"west": {"uv": [7, 1, 8, 7], "rotation": 270, "texture": "#0"},
+				"up": {"uv": [1, 1, 7, 7], "rotation": 180, "texture": "#0"},
+				"down": {"uv": [9, 1, 15, 7], "texture": "#0"}
+			}
+		}
+	],
+	"gui_light": "front",
+	"display": {
+		"thirdperson_righthand": {
+			"rotation": [90, 180, 0],
+			"translation": [0, 2.1, 6.25],
+			"scale": [0.69, 0.69, 0.69]
+		},
+		"thirdperson_lefthand": {
+			"rotation": [90, 180, 0],
+			"translation": [0, 2.1, 6.25],
+			"scale": [0.69, 0.69, 0.69]
+		},
+		"firstperson_righthand": {
+			"rotation": [90, 180, 0],
+			"translation": [0, 2.1, 6.25],
+			"scale": [0.69, 0.69, 0.69]
+		},
+		"firstperson_lefthand": {
+			"rotation": [90, 180, 0],
+			"translation": [0, 2.1, 6.25],
+			"scale": [0.69, 0.69, 0.69]
+		},
+		"ground": {
+			"rotation": [90, 180, 0],
+			"translation": [0, 0, 5],
+			"scale": [0.69, 0.69, 0.69]
+		},
+		"gui": {
+			"rotation": [90, 180, 0],
+			"translation": [0, -2.25, 13],
+			"scale": [1.69, 1.69, 1.69]
+		},
+		"head": {
+			"rotation": [90, 180, 0],
+			"translation": [0, 2.1, 6.25],
+			"scale": [0.69, 0.69, 0.69]
+		},
+		"fixed": {
+			"rotation": [90, 180, 0],
+			"translation": [0, 0, 13],
+			"scale": [1.6, 1.6, 1.6]
+		}
+	},
+	"groups": [
+		{
+			"name": "card base",
+			"origin": [4, 1, 4],
+			"color": 0,
+			"children": [0, 1]
+		}
+	]
+}
