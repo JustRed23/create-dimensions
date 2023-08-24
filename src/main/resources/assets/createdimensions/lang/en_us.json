@@ -7,6 +7,7 @@
   "createdimensions.gui.fluid_transporter.title": "Fluid Transporter",
   "createdimensions.gui.rotation_transporter.title": "Rotation Transporter",
 
+  "createdimensions.gui.item_transporter.empty": "Empty",
   "createdimensions.gui.rotation_transporter.no_network": "No network",
   "createdimensions.gui.rotation_transporter.speed": "Network speed: %s",
   "createdimensions.gui.rotation_transporter.stress": "Network stress: %s",

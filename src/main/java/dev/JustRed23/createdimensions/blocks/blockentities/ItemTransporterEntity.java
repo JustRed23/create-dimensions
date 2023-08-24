@@ -81,8 +81,11 @@ public class ItemTransporterEntity extends TransporterEntity implements IHaveGog
             empty = false;
         }
 
-        if (empty)
-            tooltip.clear();
+        if (empty) {
+            Lang.builder(DimensionsAddon.MODID).translate("gui.item_transporter.empty")
+                    .style(ChatFormatting.DARK_GRAY)
+                    .forGoggles(tooltip, 1);
+        }
 
         return true;
     }
