@@ -14,7 +14,7 @@ import com.simibubi.create.infrastructure.config.AllConfigs;
 import com.simibubi.create.infrastructure.config.CClient;
 import dev.JustRed23.createdimensions.DimensionsAddon;
 import dev.JustRed23.createdimensions.behaviour.ISync;
-import dev.JustRed23.createdimensions.items.SynchronizerCard;
+import dev.JustRed23.createdimensions.items.SynchronizerItem;
 import dev.JustRed23.createdimensions.register.CDItems;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
@@ -94,14 +94,14 @@ public class SynchronizerOverlay {
 
                 final ItemStack itemInHand = mc.player.getItemInHand(InteractionHand.MAIN_HAND);
 
-                if (SynchronizerCard.isSameBlockAsError(itemInHand, be)) {
+                if (SynchronizerItem.isSameBlockAsError(itemInHand, be)) {
                     Lang.builder(DimensionsAddon.MODID)
                             .translate("gui.transporter.error." + itemInHand.getTag().getCompound("ConnectionError").getString("error"))
                             .style(ChatFormatting.RED)
                             .forGoggles(tooltip, 1);
                 } else {
                     Lang.builder(DimensionsAddon.MODID)
-                            .translate(SynchronizerCard.isSameBlockAsStored(itemInHand, be) ? "gui.transporter.stored_connection" : "gui.transporter.right_click_to_connect")
+                            .translate(SynchronizerItem.isSameBlockAsStored(itemInHand, be) ? "gui.transporter.stored_connection" : "gui.transporter.right_click_to_connect")
                             .style(ChatFormatting.GRAY)
                             .forGoggles(tooltip, 1);
                 }
@@ -157,7 +157,7 @@ public class SynchronizerOverlay {
         RemovedGuiUtils.drawHoveringText(poseStack, tooltip, posX, posY, width, height, -1, colorBackground.getRGB(),
                 colorBorderTop.getRGB(), colorBorderBot.getRGB(), mc.font);
 
-        ItemStack item = CDItems.TRANSPORTER_SYNCHRONIZER_CARD.asStack();
+        ItemStack item = CDItems.TRANSPORTER_SYNCHRONIZER.asStack();
         GuiGameElement.of(item)
                 .at(posX + 10, posY - 16, 450)
                 .render(poseStack);

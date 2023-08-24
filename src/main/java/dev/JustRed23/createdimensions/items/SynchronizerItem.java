@@ -30,9 +30,9 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class SynchronizerCard extends Item {
+public class SynchronizerItem extends Item {
 
-    public SynchronizerCard(Properties pProperties) {
+    public SynchronizerItem(Properties pProperties) {
         super(pProperties);
     }
 
@@ -57,7 +57,7 @@ public class SynchronizerCard extends Item {
         ItemStack hand = pContext.getItemInHand();
 
         final BlockEntity blockEntity = pContext.getLevel().getBlockEntity(pContext.getClickedPos());
-        if (blockEntity != null && ISync.class.isAssignableFrom(blockEntity.getClass()) && !((ISync) blockEntity).isConnected() && hand.is(CDItems.TRANSPORTER_SYNCHRONIZER_CARD.get())) {
+        if (blockEntity != null && ISync.class.isAssignableFrom(blockEntity.getClass()) && !((ISync) blockEntity).isConnected() && hand.is(CDItems.TRANSPORTER_SYNCHRONIZER.get())) {
             if (hasStoredData(hand)) {
                 final CompoundTag tag = hand.getTag().getCompound("RemoteConnection");
 

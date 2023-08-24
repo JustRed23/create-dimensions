@@ -15,6 +15,6 @@ public final class ItemUtils {
 
     @OnlyIn(Dist.CLIENT)
     public static boolean isHoldingSynchronizerCard() {
-        return isHolding(CDItems.TRANSPORTER_SYNCHRONIZER_CARD.get());
+        return isHolding(CDItems.TRANSPORTER_SYNCHRONIZER.get());
     }
 }
