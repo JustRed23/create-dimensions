@@ -62,6 +62,7 @@ public class ItemTransporter extends HorizontalDirectionalBlock implements IBE<I
 
     public @NotNull InteractionResult use(@NotNull BlockState pState, Level pLevel, @NotNull BlockPos pPos, @NotNull Player pPlayer, @NotNull InteractionHand pHand, @NotNull BlockHitResult pHit) {
         if (pLevel.isClientSide) return InteractionResult.SUCCESS;
+        if (!pPlayer.isShiftKeyDown()) return InteractionResult.PASS;
         withBlockEntityDo(pLevel, pPos, be -> NetworkHooks.openGui((ServerPlayer) pPlayer, be, be::sendToMenu));
         return InteractionResult.SUCCESS;
     }
