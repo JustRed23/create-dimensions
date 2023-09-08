@@ -7,7 +7,7 @@ import com.simibubi.create.content.kinetics.base.SingleRotatingInstance;
 import com.simibubi.create.content.kinetics.base.flwdata.RotatingData;
 import com.simibubi.create.content.kinetics.simpleRelays.BracketedKineticBlockEntityRenderer;
 import dev.JustRed23.createdimensions.blocks.blockentities.RotationTransporterEntity;
-import dev.JustRed23.createdimensions.register.CBPartialModels;
+import dev.JustRed23.createdimensions.register.CDPartialModels;
 
 public class RotationTransporterInstance extends SingleRotatingInstance<RotationTransporterEntity> {
 
@@ -21,7 +21,7 @@ public class RotationTransporterInstance extends SingleRotatingInstance<Rotation
     public void init() {
         super.init();
 
-        Instancer<RotatingData> shaft = getRotatingMaterial().getModel(CBPartialModels.ROTATION_TRANSPORTER_SHAFT, blockState);
+        Instancer<RotatingData> shaft = getRotatingMaterial().getModel(CDPartialModels.ROTATION_TRANSPORTER_SHAFT, blockState);
         additionalShaft = setup(shaft.createInstance(), blockEntity.getSpeed());
     }
 
