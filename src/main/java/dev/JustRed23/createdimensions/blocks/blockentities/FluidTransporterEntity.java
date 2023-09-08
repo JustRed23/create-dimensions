@@ -4,14 +4,23 @@ import com.simibubi.create.content.equipment.goggles.IHaveGoggleInformation;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.foundation.blockEntity.behaviour.fluid.SmartFluidTankBehaviour;
 import com.simibubi.create.foundation.fluid.SmartFluidTank;
+import com.simibubi.create.foundation.item.ItemHelper;
+import com.simibubi.create.foundation.item.SmartInventory;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.LangBuilder;
 import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 import dev.JustRed23.createdimensions.DimensionsAddon;
+import dev.JustRed23.createdimensions.gui.impl.FluidTransporterMenu;
+import dev.JustRed23.createdimensions.inv.UpgradeInventory;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
@@ -27,12 +36,14 @@ import java.util.Optional;
 
 import static dev.JustRed23.createdimensions.utils.ItemUtils.isHoldingSynchronizerCard;
 
-public class FluidTransporterEntity extends TransporterEntity implements IHaveGoggleInformation {
+public class FluidTransporterEntity extends TransporterEntity implements IHaveGoggleInformation, MenuProvider {
 
     private SmartFluidTankBehaviour tank;
+    private final SmartInventory upgradeInventory;
 
     public FluidTransporterEntity(BlockEntityType<?> pType, BlockPos pPos, BlockState pBlockState) {
         super(pType, pPos, pBlockState);
+        upgradeInventory = new UpgradeInventory(this);
     }
 
     public void addBehaviours(List<BlockEntityBehaviour> behaviours) {
@@ -130,8 +141,17 @@ public class FluidTransporterEntity extends TransporterEntity implements IHaveGo
     }
 
     protected void onConnectionRemoved(boolean keepContents) {
-        if (!keepContents)
+        if (!keepContents) {
             tank.getPrimaryHandler().setFluid(FluidStack.EMPTY);
+
+            if (!upgradeInventory.isEmpty())
+                ItemHelper.dropContents(getLevel(), getBlockPos(), upgradeInventory);
+        }
+    }
+
+    protected void dropContents() {
+        if (!upgradeInventory.isEmpty())
+            ItemHelper.dropContents(getLevel(), getBlockPos(), upgradeInventory);
     }
 
     protected void onModeChanged(TransportationMode mode) {
@@ -148,11 +168,33 @@ public class FluidTransporterEntity extends TransporterEntity implements IHaveGo
         setChanged();
     }
 
+    protected void read(CompoundTag tag, boolean clientPacket) {
+        super.read(tag, clientPacket);
+        upgradeInventory.deserializeNBT(tag.getCompound("UpgradeInventory"));
+    }
+
+    protected void write(CompoundTag tag, boolean clientPacket) {
+        super.write(tag, clientPacket);
+        tag.put("UpgradeInventory", upgradeInventory.serializeNBT());
+    }
+
+    public @Nullable AbstractContainerMenu createMenu(int pContainerId, @NotNull Inventory pPlayerInventory, @NotNull Player pPlayer) {
+        return FluidTransporterMenu.create(pContainerId, pPlayerInventory, this);
+    }
+
     public LerpedFloat getFluidLevel() {
         return tank.getPrimaryTank().getFluidLevel();
     }
 
     public SmartFluidTank getTank() {
         return tank.getPrimaryHandler();
+    }
+
+    public SmartInventory getUpgradeInventory() {
+        return upgradeInventory;
+    }
+
+    public @NotNull Component getDisplayName() {
+        return Lang.builder(DimensionsAddon.MODID).translate("gui.fluid_transporter.title").component();
     }
 }

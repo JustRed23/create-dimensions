@@ -8,11 +8,17 @@ import com.simibubi.create.foundation.item.SmartInventory;
 import com.simibubi.create.foundation.utility.Components;
 import com.simibubi.create.foundation.utility.Lang;
 import dev.JustRed23.createdimensions.DimensionsAddon;
+import dev.JustRed23.createdimensions.gui.impl.ItemTransporterMenu;
+import dev.JustRed23.createdimensions.inv.UpgradeInventory;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -28,7 +34,7 @@ import java.util.List;
 
 import static dev.JustRed23.createdimensions.utils.ItemUtils.isHoldingSynchronizerCard;
 
-public class ItemTransporterEntity extends TransporterEntity implements IHaveGoggleInformation {
+public class ItemTransporterEntity extends TransporterEntity implements IHaveGoggleInformation, MenuProvider {
 
     private final SmartInventory upgradeInventory;
     private final SmartInventory syncInventory;
@@ -37,7 +43,7 @@ public class ItemTransporterEntity extends TransporterEntity implements IHaveGog
 
     public ItemTransporterEntity(BlockEntityType<?> pType, BlockPos pPos, BlockState pBlockState) {
         super(pType, pPos, pBlockState);
-        upgradeInventory = new SmartInventory(1, this).withMaxStackSize(1);
+        upgradeInventory = new UpgradeInventory(this);
         syncInventory = new SmartInventory(4, this).whenContentsChanged($ -> this.syncWithConnected());
 
         itemCapability = LazyOptional.of(() -> syncInventory);
@@ -171,6 +177,10 @@ public class ItemTransporterEntity extends TransporterEntity implements IHaveGog
         tag.put("UpgradeInventory", upgradeInventory.serializeNBT());
     }
 
+    public @Nullable AbstractContainerMenu createMenu(int pContainerId, @NotNull Inventory pPlayerInventory, @NotNull Player pPlayer) {
+        return ItemTransporterMenu.create(pContainerId, pPlayerInventory, this);
+    }
+
     public void invalidate() {
         super.invalidate();
         itemCapability.invalidate();
@@ -182,5 +192,17 @@ public class ItemTransporterEntity extends TransporterEntity implements IHaveGog
 
     public SmartInventory getSyncInventory() {
         return syncInventory;
+    }
+
+    public SmartInventory getUpgradeInventory() {
+        return upgradeInventory;
+    }
+
+    public @NotNull Component getDisplayName() {
+        return Lang.builder(DimensionsAddon.MODID).translate("gui.item_transporter.title").component();
+    }
+
+    public int getContainerSize() {
+        return super.getContainerSize() + syncInventory.getSlots();
     }
 }

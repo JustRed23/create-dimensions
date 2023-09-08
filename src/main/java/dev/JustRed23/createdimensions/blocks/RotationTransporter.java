@@ -9,13 +9,18 @@ import dev.JustRed23.createdimensions.register.CDBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.PushReaction;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraftforge.network.NetworkHooks;
 import org.jetbrains.annotations.NotNull;
 
 public class RotationTransporter extends HorizontalKineticBlock implements IBE<RotationTransporterEntity>, ICogWheel, IWrenchable {
@@ -49,6 +54,12 @@ public class RotationTransporter extends HorizontalKineticBlock implements IBE<R
 
             return InteractionResult.sidedSuccess(clientSide);
         });
+    }
+
+    public @NotNull InteractionResult use(@NotNull BlockState pState, Level pLevel, @NotNull BlockPos pPos, @NotNull Player pPlayer, @NotNull InteractionHand pHand, @NotNull BlockHitResult pHit) {
+        if (pLevel.isClientSide) return InteractionResult.SUCCESS;
+        withBlockEntityDo(pLevel, pPos, be -> NetworkHooks.openGui((ServerPlayer) pPlayer, be, be::sendToMenu));
+        return InteractionResult.SUCCESS;
     }
 
     public int getLightEmission(BlockState state, BlockGetter level, BlockPos pos) {

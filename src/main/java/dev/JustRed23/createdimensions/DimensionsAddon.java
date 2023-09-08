@@ -38,6 +38,7 @@ public class DimensionsAddon {
         CDBlockEntities.init();
         CDBlocks.init();
         CDItems.init();
+        CDMenus.init();
     }
 
     @SubscribeEvent

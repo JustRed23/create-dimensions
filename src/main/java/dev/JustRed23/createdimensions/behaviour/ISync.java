@@ -1,5 +1,6 @@
 package dev.JustRed23.createdimensions.behaviour;
 
+import com.simibubi.create.foundation.item.SmartInventory;
 import dev.JustRed23.createdimensions.blocks.blockentities.TransporterEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceKey;
@@ -20,4 +21,10 @@ public interface ISync {
     void setMode(@NotNull TransporterEntity.TransportationMode mode);
     TransporterEntity.TransportationMode getMode();
     void switchMode();
+
+    SmartInventory getUpgradeInventory();
+
+    default int getContainerSize() {
+        return getUpgradeInventory().getContainerSize();
+    }
 }

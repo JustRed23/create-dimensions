@@ -3,10 +3,14 @@ package dev.JustRed23.createdimensions.blocks.blockentities;
 import com.simibubi.create.content.equipment.goggles.IHaveHoveringInformation;
 import com.simibubi.create.content.kinetics.base.IRotate;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
+import com.simibubi.create.foundation.item.ItemHelper;
+import com.simibubi.create.foundation.item.SmartInventory;
 import com.simibubi.create.foundation.utility.Lang;
 import com.simibubi.create.foundation.utility.NBTHelper;
 import dev.JustRed23.createdimensions.DimensionsAddon;
 import dev.JustRed23.createdimensions.behaviour.ISync;
+import dev.JustRed23.createdimensions.gui.impl.RotationTransporterMenu;
+import dev.JustRed23.createdimensions.inv.UpgradeInventory;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
@@ -16,21 +20,29 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Objects;
 
 import static dev.JustRed23.createdimensions.utils.ItemUtils.isHoldingSynchronizerCard;
 
-public class RotationTransporterEntity extends KineticBlockEntity implements IHaveHoveringInformation, ISync {
+public class RotationTransporterEntity extends KineticBlockEntity implements IHaveHoveringInformation, ISync, MenuProvider {
+
+    private final SmartInventory upgradeInventory;
 
     public RotationTransporterEntity(BlockEntityType<?> typeIn, BlockPos pos, BlockState state) {
         super(typeIn, pos, state);
+        upgradeInventory = new UpgradeInventory(this);
     }
 
     public boolean addToTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
@@ -88,10 +100,30 @@ public class RotationTransporterEntity extends KineticBlockEntity implements IHa
     protected void onConnectionRemoved(boolean keepContents) {
         detachKinetics();
         removeSource();
+
+        if (!keepContents && !upgradeInventory.isEmpty())
+                ItemHelper.dropContents(getLevel(), getBlockPos(), upgradeInventory);
+    }
+
+    protected void dropContents() {
+        if (!upgradeInventory.isEmpty())
+            ItemHelper.dropContents(getLevel(), getBlockPos(), upgradeInventory);
     }
 
     protected void onModeChanged(TransporterEntity.TransportationMode mode) {
         setChanged();
+    }
+
+    public void onRead(CompoundTag tag, boolean clientPacket) {
+        upgradeInventory.deserializeNBT(tag.getCompound("UpgradeInventory"));
+    }
+
+    public void onWrite(CompoundTag tag, boolean clientPacket) {
+        tag.put("UpgradeInventory", upgradeInventory.serializeNBT());
+    }
+
+    public @Nullable AbstractContainerMenu createMenu(int pContainerId, @NotNull Inventory pPlayerInventory, @NotNull Player pPlayer) {
+        return RotationTransporterMenu.create(pContainerId, pPlayerInventory, this);
     }
 
     public void setChanged() {
@@ -126,6 +158,17 @@ public class RotationTransporterEntity extends KineticBlockEntity implements IHa
         return other;
     }
 
+    public SmartInventory getUpgradeInventory() {
+        return upgradeInventory;
+    }
+
+    public @NotNull Component getDisplayName() {
+        return Lang.builder(DimensionsAddon.MODID).translate("gui.rotation_transporter.title").component();
+    }
+
+
+
+
 
 
     // Code copied from TransporterEntity
@@ -133,11 +176,6 @@ public class RotationTransporterEntity extends KineticBlockEntity implements IHa
     protected ResourceKey<Level> dimension;
     private TransporterEntity.TransportationMode mode = TransporterEntity.TransportationMode.INSERT;
     private boolean preventSync = false; // Prevents a sync loop when syncing with connected block
-
-    public void initialize() {
-        super.initialize();
-        if (isConnected()) connectTo(connectedTo, dimension); // Attempt to reconnect with the data we got from nbt
-    }
 
     protected void read(CompoundTag tag, boolean clientPacket) {
         super.read(tag, clientPacket);
@@ -159,10 +197,12 @@ public class RotationTransporterEntity extends KineticBlockEntity implements IHa
 
         connectedTo = NbtUtils.readBlockPos(connectionTag.getCompound("pos"));
         dimension = ResourceKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation(connectionTag.getString("dimension")));
+        onRead(tag, clientPacket);
     }
 
     protected void write(CompoundTag tag, boolean clientPacket) {
         super.write(tag, clientPacket);
+        onWrite(tag, clientPacket);
 
         NBTHelper.writeEnum(tag, "Mode", mode);
 
@@ -243,7 +283,10 @@ public class RotationTransporterEntity extends KineticBlockEntity implements IHa
     }
 
     public void clearConnection(boolean keepContents, boolean keepBoth) {
-        if (!isConnected()) return;
+        if (!isConnected()) {
+            dropContents();
+            return;
+        }
 
         ServerLevel dimensionLevel = level.getServer().getLevel(this.dimension);
         if (dimensionLevel == null) return;
