@@ -4,7 +4,7 @@ import com.jozufozu.flywheel.core.PartialModel;
 import dev.JustRed23.createdimensions.DimensionsAddon;
 import net.minecraft.resources.ResourceLocation;
 
-public final class CBPartialModels {
+public final class CDPartialModels {
 
     // This is just here to make sure the class is loaded
     public static void init() {}

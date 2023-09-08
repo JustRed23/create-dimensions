@@ -34,7 +34,7 @@ public class DimensionsAddon {
 
     private void registerStuff(IEventBus modEventBus) {
         CDCreativeTabs.init();
-        CBPartialModels.init();
+        CDPartialModels.init();
         CDBlockEntities.init();
         CDBlocks.init();
         CDItems.init();
