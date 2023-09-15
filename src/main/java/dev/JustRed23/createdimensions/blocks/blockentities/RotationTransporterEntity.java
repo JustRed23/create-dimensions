@@ -1,6 +1,6 @@
 package dev.JustRed23.createdimensions.blocks.blockentities;
 
-import com.simibubi.create.content.equipment.goggles.IHaveHoveringInformation;
+import com.simibubi.create.content.equipment.goggles.IHaveGoggleInformation;
 import com.simibubi.create.content.kinetics.base.IRotate;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
 import com.simibubi.create.foundation.item.ItemHelper;
@@ -36,7 +36,7 @@ import java.util.Objects;
 
 import static dev.JustRed23.createdimensions.utils.ItemUtils.isHoldingSynchronizerCard;
 
-public class RotationTransporterEntity extends KineticBlockEntity implements IHaveHoveringInformation, ISync, MenuProvider {
+public class RotationTransporterEntity extends KineticBlockEntity implements IHaveGoggleInformation, ISync, MenuProvider {
 
     private final SmartInventory upgradeInventory;
 
@@ -45,7 +45,7 @@ public class RotationTransporterEntity extends KineticBlockEntity implements IHa
         upgradeInventory = new UpgradeInventory(this);
     }
 
-    public boolean addToTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
+    public boolean addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
         if (isHoldingSynchronizerCard())
             return false;
 
@@ -76,7 +76,6 @@ public class RotationTransporterEntity extends KineticBlockEntity implements IHa
                                 )
                 ).forGoggles(tooltip, 1);
 
-        super.addToTooltip(tooltip, isPlayerSneaking);
         return true;
     }
 
