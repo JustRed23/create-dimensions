@@ -15,7 +15,9 @@ public enum CDGuiTextures implements ScreenElement {
 
     ITEM_TRANSPORTER("item_transporter", 176, 100),
     FLUID_TRANSPORTER("fluid_transporter", 176, 100),
-    ROTATION_TRANSPORTER("rotation_transporter", 176, 100);
+    ROTATION_TRANSPORTER("rotation_transporter", 176, 100),
+
+    FLUID_TANK_MEASUREMENT("fluid_transporter", 176, 0, 10, 60);
 
     public final ResourceLocation location;
     public final int width, height;

@@ -2,8 +2,10 @@ package dev.JustRed23.createdimensions.gui.impl;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.foundation.gui.AllGuiTextures;
+import dev.JustRed23.createdimensions.blocks.blockentities.FluidTransporterEntity;
 import dev.JustRed23.createdimensions.gui.TransporterScreen;
 import dev.JustRed23.createdimensions.register.CDGuiTextures;
+import dev.JustRed23.createdimensions.utils.RenderUtils;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import org.jetbrains.annotations.NotNull;
@@ -28,7 +30,11 @@ public class FluidTransporterScreen extends TransporterScreen<FluidTransporterMe
         int x = leftPos;
         int y = topPos;
 
+        FluidTransporterEntity transporter = ((FluidTransporterEntity) getMenu().contentHolder);
+
         menu.render(pPoseStack, x, y, this);
-        font.draw(pPoseStack, title, x + 8, y + 6, 0x404040);
+        RenderUtils.renderFluidBox(pPoseStack, x + 67, y + 21, 42, 58, transporter.getTank().getFluid(), transporter.getTank().getCapacity());
+        CDGuiTextures.FLUID_TANK_MEASUREMENT.render(pPoseStack, x + 66, y + 20);
+        drawTitle(pPoseStack);
     }
 }

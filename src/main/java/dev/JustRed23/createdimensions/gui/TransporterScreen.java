@@ -21,4 +21,8 @@ public abstract class TransporterScreen<T extends TransporterMenu> extends Abstr
         int invY = topPos + totalHeight + 2;
         renderPlayerInventory(ms, invX, invY);
     }
+
+    protected void drawTitle(PoseStack ms) {
+        font.draw(ms, title, leftPos + 8, topPos + 6, 0x404040);
+    }
 }

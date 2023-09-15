@@ -29,6 +29,6 @@ public class RotationTransporterScreen extends TransporterScreen<RotationTranspo
         int y = topPos;
 
         menu.render(pPoseStack, x, y, this);
-        font.draw(pPoseStack, title, x + 8, y + 6, 0x404040);
+        drawTitle(pPoseStack);
     }
 }
