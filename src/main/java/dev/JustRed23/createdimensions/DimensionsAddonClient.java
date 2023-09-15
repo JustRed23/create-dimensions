@@ -1,6 +1,6 @@
 package dev.JustRed23.createdimensions;
 
-import dev.JustRed23.createdimensions.overlay.SynchronizerOverlay;
+import dev.JustRed23.createdimensions.gui.overlay.SynchronizerOverlay;
 import net.minecraftforge.client.gui.ForgeIngameGui;
 import net.minecraftforge.client.gui.OverlayRegistry;
 import net.minecraftforge.eventbus.api.SubscribeEvent;

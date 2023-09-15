@@ -1,4 +1,4 @@
-package dev.JustRed23.createdimensions.overlay;
+package dev.JustRed23.createdimensions.gui.overlay;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.CreateClient;
