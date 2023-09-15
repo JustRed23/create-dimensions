@@ -6,6 +6,7 @@ import com.simibubi.create.content.kinetics.simpleRelays.ICogWheel;
 import com.simibubi.create.foundation.block.IBE;
 import dev.JustRed23.createdimensions.blocks.blockentities.RotationTransporterEntity;
 import dev.JustRed23.createdimensions.register.CDBlockEntities;
+import dev.JustRed23.createdimensions.utils.TransporterUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.TranslatableComponent;
@@ -58,7 +59,7 @@ public class RotationTransporter extends HorizontalKineticBlock implements IBE<R
 
     public @NotNull InteractionResult use(@NotNull BlockState pState, Level pLevel, @NotNull BlockPos pPos, @NotNull Player pPlayer, @NotNull InteractionHand pHand, @NotNull BlockHitResult pHit) {
         if (pLevel.isClientSide) return InteractionResult.SUCCESS;
-        if (!pPlayer.isShiftKeyDown()) return InteractionResult.PASS;
+        if (TransporterUtils.handleItemUse(pState, pLevel, pPos, pPlayer, pHand, pHit)) return InteractionResult.PASS;
         withBlockEntityDo(pLevel, pPos, be -> NetworkHooks.openGui((ServerPlayer) pPlayer, be, be::sendToMenu));
         return InteractionResult.SUCCESS;
     }
