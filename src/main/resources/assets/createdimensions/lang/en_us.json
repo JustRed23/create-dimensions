@@ -36,5 +36,5 @@
   "tooltip.createdimensions.transporter_synchronizer_card.block": "Block: %s",
   "tooltip.createdimensions.transporter_synchronizer_card.level": "Level: %s",
   "tooltip.createdimensions.transporter_synchronizer_card.pos": "Position: %s",
-  "tooltip.createdimensions.transporter_chunk_upgrade": "Loads the chunk the transporter is in when placed in a transporter"
+  "tooltip.createdimensions.transporter_chunk_upgrade": "When placed in a transporter, loads the chunk it is in and the 8 surrounding chunks"
 }
