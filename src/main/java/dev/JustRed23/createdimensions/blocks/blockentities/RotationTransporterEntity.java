@@ -165,6 +165,13 @@ public class RotationTransporterEntity extends KineticBlockEntity implements IHa
         return Lang.builder(DimensionsAddon.MODID).translate("gui.rotation_transporter.title").component();
     }
 
+    public float getStress() {
+        return stress;
+    }
+
+    public float getMaxStress() {
+        return capacity;
+    }
 
 
 
