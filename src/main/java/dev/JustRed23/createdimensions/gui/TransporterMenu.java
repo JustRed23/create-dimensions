@@ -2,7 +2,6 @@ package dev.JustRed23.createdimensions.gui;
 
 import com.simibubi.create.foundation.gui.menu.MenuBase;
 import dev.JustRed23.createdimensions.behaviour.ISync;
-import dev.JustRed23.createdimensions.register.CDItems;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
