@@ -2,13 +2,13 @@ package dev.JustRed23.createdimensions.gui;
 
 import com.simibubi.create.foundation.gui.menu.MenuBase;
 import dev.JustRed23.createdimensions.behaviour.ISync;
+import dev.JustRed23.createdimensions.inv.UpgradeSlot;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.items.SlotItemHandler;
 import org.jetbrains.annotations.NotNull;
 
 public abstract class TransporterMenu extends MenuBase<ISync> {
@@ -22,7 +22,7 @@ public abstract class TransporterMenu extends MenuBase<ISync> {
     }
 
     protected void addUpgradeSlot(ISync contentHolder, int x, int y) {
-        addSlot(new SlotItemHandler(contentHolder.getUpgradeInventory(), 0, x, y));
+        addSlot(new UpgradeSlot(contentHolder.getUpgradeInventory(), 0, x, y));
     }
 
     public @NotNull ItemStack quickMoveStack(@NotNull Player pPlayer, int pIndex) {
