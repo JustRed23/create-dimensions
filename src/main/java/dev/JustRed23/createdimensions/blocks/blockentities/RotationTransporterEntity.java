@@ -208,6 +208,7 @@ public class RotationTransporterEntity extends KineticBlockEntity implements IHa
         connectedTo = NbtUtils.readBlockPos(connectionTag.getCompound("pos"));
         dimension = ResourceKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation(connectionTag.getString("dimension")));
 
+        if (clientPacket) return;
         chunkLoaded = tag.getBoolean("ChunkLoaded");
         if (chunkLoaded) TransporterUtils.handleChunkLoading(this, getLevel(), getUpgradeInventory());
     }
@@ -217,7 +218,9 @@ public class RotationTransporterEntity extends KineticBlockEntity implements IHa
         onWrite(tag, clientPacket);
 
         NBTHelper.writeEnum(tag, "Mode", mode);
-        tag.putBoolean("ChunkLoaded", chunkLoaded);
+
+        if (!clientPacket)
+            tag.putBoolean("ChunkLoaded", chunkLoaded);
 
         if (!isConnected()) return;
         CompoundTag connectionTag = new CompoundTag();

@@ -63,7 +63,9 @@ public class TransporterUtils {
         BlockEntity owner = (BlockEntity) transporter;
 
         //Remove chunk loading capabilities
-        transporter.setChunkLoaded(false);
-        ChunkLoaderUtils.unloadSurroundingChunks(srvLvl, owner);
+        if (transporter.isChunkLoaded()) {
+            transporter.setChunkLoaded(false);
+            ChunkLoaderUtils.unloadSurroundingChunks(srvLvl, owner);
+        }
     }
 }
