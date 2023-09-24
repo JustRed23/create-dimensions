@@ -1,11 +1,15 @@
 package dev.JustRed23.createdimensions.utils;
 
+import com.simibubi.create.foundation.item.SmartInventory;
+import dev.JustRed23.createdimensions.behaviour.ISync;
 import dev.JustRed23.createdimensions.register.CDItems;
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.NotNull;
@@ -25,5 +29,39 @@ public class TransporterUtils {
         //TODO: custom item handling, API?
 
         return false;
+    }
+
+    public static void handleChunkLoading(@NotNull ISync transporter, Level level, SmartInventory upgradeInventory) {
+        if (!(level instanceof ServerLevel srvLvl)) return;
+        BlockEntity owner = (BlockEntity) transporter;
+
+        if (owner.isRemoved() || upgradeInventory == null)
+            return;
+
+        //Don't load chunks if the transporter isn't connected
+        if (!transporter.isConnected()) {
+            transporter.setChunkLoaded(false);
+            ChunkLoaderUtils.unloadSurroundingChunks(srvLvl, owner);
+        }
+
+        //Don't load chunks if the transporter doesn't have a chunk upgrade
+        if (!CDItems.TRANSPORTER_CHUNK_UPGRADE.isIn(upgradeInventory.getStackInSlot(0))) {
+            transporter.setChunkLoaded(false);
+            ChunkLoaderUtils.unloadSurroundingChunks(srvLvl, owner);
+        }
+
+        if (transporter.isChunkLoaded()) return;
+
+        transporter.setChunkLoaded(true);
+        ChunkLoaderUtils.loadSurroundingChunks(srvLvl, owner);
+    }
+
+    public static void handleDestroyed(@NotNull ISync transporter, Level level) {
+        if (!(level instanceof ServerLevel srvLvl)) return;
+        BlockEntity owner = (BlockEntity) transporter;
+
+        //Remove chunk loading capabilities
+        transporter.setChunkLoaded(false);
+        ChunkLoaderUtils.unloadSurroundingChunks(srvLvl, owner);
     }
 }

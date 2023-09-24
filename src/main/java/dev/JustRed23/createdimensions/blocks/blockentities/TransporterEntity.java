@@ -3,6 +3,7 @@ package dev.JustRed23.createdimensions.blocks.blockentities;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 import com.simibubi.create.foundation.utility.NBTHelper;
 import dev.JustRed23.createdimensions.behaviour.ISync;
+import dev.JustRed23.createdimensions.utils.TransporterUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
@@ -23,6 +24,7 @@ public abstract class TransporterEntity extends SmartBlockEntity implements ISyn
     protected BlockPos connectedTo;
     protected ResourceKey<Level> dimension;
     private TransportationMode mode = TransportationMode.INSERT;
+    private boolean chunkLoaded = false;
     private boolean preventSync = false; // Prevents a sync loop when syncing with connected block
 
     protected abstract boolean tryConnect(TransporterEntity blockEntity);
@@ -55,12 +57,16 @@ public abstract class TransporterEntity extends SmartBlockEntity implements ISyn
 
         connectedTo = NbtUtils.readBlockPos(connectionTag.getCompound("pos"));
         dimension = ResourceKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation(connectionTag.getString("dimension")));
+
+        chunkLoaded = tag.getBoolean("ChunkLoaded");
+        if (chunkLoaded) TransporterUtils.handleChunkLoading(this, getLevel(), getUpgradeInventory());
     }
 
     protected void write(CompoundTag tag, boolean clientPacket) {
         super.write(tag, clientPacket);
 
         NBTHelper.writeEnum(tag, "Mode", mode);
+        tag.putBoolean("ChunkLoaded", chunkLoaded);
 
         if (!isConnected()) return;
         CompoundTag connectionTag = new CompoundTag();
@@ -70,6 +76,7 @@ public abstract class TransporterEntity extends SmartBlockEntity implements ISyn
     }
 
     public void destroy() {
+        TransporterUtils.handleDestroyed(this, getLevel());
         clearConnection(false);
         super.destroy();
     }
@@ -173,6 +180,14 @@ public abstract class TransporterEntity extends SmartBlockEntity implements ISyn
 
     public void switchMode() {
         setMode(getMode() == TransportationMode.INSERT ? TransportationMode.EXTRACT : TransportationMode.INSERT);
+    }
+
+    public boolean isChunkLoaded() {
+        return chunkLoaded;
+    }
+
+    public void setChunkLoaded(boolean chunkLoaded) {
+        this.chunkLoaded = chunkLoaded;
     }
 
     public enum TransportationMode {

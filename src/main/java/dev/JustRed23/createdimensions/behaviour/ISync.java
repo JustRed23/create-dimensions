@@ -24,6 +24,9 @@ public interface ISync {
 
     SmartInventory getUpgradeInventory();
 
+    boolean isChunkLoaded();
+    void setChunkLoaded(boolean chunkLoaded);
+
     default int getContainerSize() {
         return getUpgradeInventory().getContainerSize();
     }

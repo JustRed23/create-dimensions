@@ -10,6 +10,7 @@ import com.simibubi.create.foundation.utility.Lang;
 import dev.JustRed23.createdimensions.DimensionsAddon;
 import dev.JustRed23.createdimensions.gui.impl.ItemTransporterMenu;
 import dev.JustRed23.createdimensions.inv.UpgradeInventory;
+import dev.JustRed23.createdimensions.utils.TransporterUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -44,6 +45,7 @@ public class ItemTransporterEntity extends TransporterEntity implements IHaveGog
     public ItemTransporterEntity(BlockEntityType<?> pType, BlockPos pPos, BlockState pBlockState) {
         super(pType, pPos, pBlockState);
         upgradeInventory = new UpgradeInventory(this);
+        upgradeInventory.whenContentsChanged($ -> TransporterUtils.handleChunkLoading(this, getLevel(), upgradeInventory));
         syncInventory = new SmartInventory(4, this).whenContentsChanged($ -> this.syncWithConnected());
 
         itemCapability = LazyOptional.of(() -> syncInventory);
@@ -166,9 +168,9 @@ public class ItemTransporterEntity extends TransporterEntity implements IHaveGog
     }
 
     protected void read(CompoundTag tag, boolean clientPacket) {
-        super.read(tag, clientPacket);
         syncInventory.deserializeNBT(tag.getCompound("SyncInventory"));
         upgradeInventory.deserializeNBT(tag.getCompound("UpgradeInventory"));
+        super.read(tag, clientPacket);
     }
 
     protected void write(CompoundTag tag, boolean clientPacket) {

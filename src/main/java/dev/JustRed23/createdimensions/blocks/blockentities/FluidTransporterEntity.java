@@ -12,6 +12,7 @@ import com.simibubi.create.foundation.utility.animation.LerpedFloat;
 import dev.JustRed23.createdimensions.DimensionsAddon;
 import dev.JustRed23.createdimensions.gui.impl.FluidTransporterMenu;
 import dev.JustRed23.createdimensions.inv.UpgradeInventory;
+import dev.JustRed23.createdimensions.utils.TransporterUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -44,6 +45,7 @@ public class FluidTransporterEntity extends TransporterEntity implements IHaveGo
     public FluidTransporterEntity(BlockEntityType<?> pType, BlockPos pPos, BlockState pBlockState) {
         super(pType, pPos, pBlockState);
         upgradeInventory = new UpgradeInventory(this);
+        upgradeInventory.whenContentsChanged($ -> TransporterUtils.handleChunkLoading(this, getLevel(), upgradeInventory));
     }
 
     public void addBehaviours(List<BlockEntityBehaviour> behaviours) {
@@ -169,8 +171,8 @@ public class FluidTransporterEntity extends TransporterEntity implements IHaveGo
     }
 
     protected void read(CompoundTag tag, boolean clientPacket) {
-        super.read(tag, clientPacket);
         upgradeInventory.deserializeNBT(tag.getCompound("UpgradeInventory"));
+        super.read(tag, clientPacket);
     }
 
     protected void write(CompoundTag tag, boolean clientPacket) {

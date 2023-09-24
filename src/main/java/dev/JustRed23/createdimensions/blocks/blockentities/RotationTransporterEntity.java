@@ -11,6 +11,7 @@ import dev.JustRed23.createdimensions.DimensionsAddon;
 import dev.JustRed23.createdimensions.behaviour.ISync;
 import dev.JustRed23.createdimensions.gui.impl.RotationTransporterMenu;
 import dev.JustRed23.createdimensions.inv.UpgradeInventory;
+import dev.JustRed23.createdimensions.utils.TransporterUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
@@ -43,6 +44,7 @@ public class RotationTransporterEntity extends KineticBlockEntity implements IHa
     public RotationTransporterEntity(BlockEntityType<?> typeIn, BlockPos pos, BlockState state) {
         super(typeIn, pos, state);
         upgradeInventory = new UpgradeInventory(this);
+        upgradeInventory.whenContentsChanged($ -> TransporterUtils.handleChunkLoading(this, getLevel(), upgradeInventory));
     }
 
     public boolean addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
@@ -181,9 +183,11 @@ public class RotationTransporterEntity extends KineticBlockEntity implements IHa
     protected BlockPos connectedTo;
     protected ResourceKey<Level> dimension;
     private TransporterEntity.TransportationMode mode = TransporterEntity.TransportationMode.INSERT;
+    private boolean chunkLoaded = false;
     private boolean preventSync = false; // Prevents a sync loop when syncing with connected block
 
     protected void read(CompoundTag tag, boolean clientPacket) {
+        onRead(tag, clientPacket);
         super.read(tag, clientPacket);
 
         if (tag.contains("Mode")) {
@@ -203,7 +207,9 @@ public class RotationTransporterEntity extends KineticBlockEntity implements IHa
 
         connectedTo = NbtUtils.readBlockPos(connectionTag.getCompound("pos"));
         dimension = ResourceKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation(connectionTag.getString("dimension")));
-        onRead(tag, clientPacket);
+
+        chunkLoaded = tag.getBoolean("ChunkLoaded");
+        if (chunkLoaded) TransporterUtils.handleChunkLoading(this, getLevel(), getUpgradeInventory());
     }
 
     protected void write(CompoundTag tag, boolean clientPacket) {
@@ -211,6 +217,7 @@ public class RotationTransporterEntity extends KineticBlockEntity implements IHa
         onWrite(tag, clientPacket);
 
         NBTHelper.writeEnum(tag, "Mode", mode);
+        tag.putBoolean("ChunkLoaded", chunkLoaded);
 
         if (!isConnected()) return;
         CompoundTag connectionTag = new CompoundTag();
@@ -220,6 +227,7 @@ public class RotationTransporterEntity extends KineticBlockEntity implements IHa
     }
 
     public void destroy() {
+        TransporterUtils.handleDestroyed(this, getLevel());
         clearConnection(false);
         super.destroy();
     }
@@ -323,5 +331,13 @@ public class RotationTransporterEntity extends KineticBlockEntity implements IHa
 
     public void switchMode() {
         setMode(getMode() == TransporterEntity.TransportationMode.INSERT ? TransporterEntity.TransportationMode.EXTRACT : TransporterEntity.TransportationMode.INSERT);
+    }
+
+    public boolean isChunkLoaded() {
+        return chunkLoaded;
+    }
+
+    public void setChunkLoaded(boolean chunkLoaded) {
+        this.chunkLoaded = chunkLoaded;
     }
 }
