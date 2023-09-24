@@ -42,12 +42,14 @@ public class TransporterUtils {
         if (!transporter.isConnected()) {
             transporter.setChunkLoaded(false);
             ChunkLoaderUtils.unloadSurroundingChunks(srvLvl, owner);
+            return;
         }
 
         //Don't load chunks if the transporter doesn't have a chunk upgrade
         if (!CDItems.TRANSPORTER_CHUNK_UPGRADE.isIn(upgradeInventory.getStackInSlot(0))) {
             transporter.setChunkLoaded(false);
             ChunkLoaderUtils.unloadSurroundingChunks(srvLvl, owner);
+            return;
         }
 
         if (transporter.isChunkLoaded()) return;
